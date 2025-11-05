@@ -1,0 +1,31 @@
+type ERC20Minter_MintComment {
+  id: ID!
+  tokenContract: String!
+  tokenId: String!
+  sender: String!
+  comment: String!
+  timestamp: Int!
+  chainId: Int!
+  transactionHash: String!
+}
+
+type CreatorFactory_SetupNewContract {
+  id: ID!
+  address: String!
+  contractURI: String!
+  defaultAdmin: String!
+  chainId: Int!
+  transactionHash: String!
+}
+
+type ERC20Minter_ERC20RewardsDeposit {
+  id: ID!
+  collection: String!
+  currency: String!
+  tokenId: BigInt!
+  recipient: String!
+  spender: String!
+  amount: String!
+  transactionHash: String!
+  blockNumber: Int!
+}
