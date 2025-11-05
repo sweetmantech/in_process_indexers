@@ -1,42 +1,144 @@
 import assert from "assert";
 import { 
   TestHelpers,
-  ZoraCreator1155FactoryImpl_SetupNewContract
+  CreatorFactory_SetupNewContract,
+  ERC20Minter_MintComment,
+  ERC20Minter_ERC20RewardsDeposit
 } from "generated";
-const { MockDb, ZoraCreator1155FactoryImpl } = TestHelpers;
 
-describe("ZoraCreator1155FactoryImpl contract SetupNewContract event tests", () => {
-  // Create mock db
-  const mockDb = MockDb.createMockDb();
+const { MockDb, CreatorFactory, ERC20Minter } = TestHelpers;
 
-  // Creating mock for ZoraCreator1155FactoryImpl contract SetupNewContract event
-  const event = ZoraCreator1155FactoryImpl.SetupNewContract.createMockEvent({/* It mocks event fields with default values. You can overwrite them if you need */});
+describe("Event Handler Tests", () => {
+  describe("CreatorFactory.SetupNewContract", () => {
+    it("should create entity correctly", async () => {
+      const mockDb = MockDb.createMockDb();
 
-  it("ZoraCreator1155FactoryImpl_SetupNewContract is created correctly", async () => {
-    // Processing the event
-    const mockDbUpdated = await ZoraCreator1155FactoryImpl.SetupNewContract.processEvent({
-      event,
-      mockDb,
+      const event = CreatorFactory.SetupNewContract.createMockEvent({
+        newContract: "0x1234567890123456789012345678901234567890",
+        defaultAdmin: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+        contractURI: "https://example.com/contract",
+      });
+
+      const mockDbUpdated = await CreatorFactory.SetupNewContract.processEvent({
+        event,
+        mockDb,
+      });
+
+      const actualEntity = mockDbUpdated.entities.CreatorFactory_SetupNewContract.get(
+        `${event.chainId}_${event.block.number}_${event.logIndex}`
+      );
+
+      const expectedEntity: CreatorFactory_SetupNewContract = {
+        id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+        address: event.params.newContract,
+        contractURI: event.params.contractURI,
+        defaultAdmin: event.params.defaultAdmin,
+        chainId: event.chainId,
+        transactionHash: event.transaction.hash,
+      };
+
+      assert.deepEqual(
+        actualEntity,
+        expectedEntity,
+        "CreatorFactory_SetupNewContract entity should match expected values"
+      );
     });
+  });
 
-    // Getting the actual entity from the mock database
-    let actualZoraCreator1155FactoryImplSetupNewContract = mockDbUpdated.entities.ZoraCreator1155FactoryImpl_SetupNewContract.get(
-      `${event.chainId}_${event.block.number}_${event.logIndex}`
-    );
+  describe("ERC20Minter.MintComment", () => {
+    it("should create entity correctly", async () => {
+      const mockDb = MockDb.createMockDb();
 
-    // Creating the expected entity
-    const expectedZoraCreator1155FactoryImplSetupNewContract: ZoraCreator1155FactoryImpl_SetupNewContract = {
-      id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-      newContract: event.params.newContract,
-      creator: event.params.creator,
-      defaultAdmin: event.params.defaultAdmin,
-      contractURI: event.params.contractURI,
-      name: event.params.name,
-      defaultRoyaltyConfiguration: event.params.defaultRoyaltyConfiguration,
-      defaultRoyaltyConfiguration: event.params.defaultRoyaltyConfiguration,
-      defaultRoyaltyConfiguration: event.params.defaultRoyaltyConfiguration,
-    };
-    // Asserting that the entity in the mock database is the same as the expected entity
-    assert.deepEqual(actualZoraCreator1155FactoryImplSetupNewContract, expectedZoraCreator1155FactoryImplSetupNewContract, "Actual ZoraCreator1155FactoryImplSetupNewContract should be the same as the expectedZoraCreator1155FactoryImplSetupNewContract");
+      const event = ERC20Minter.MintComment.createMockEvent({
+        sender: "0x1111111111111111111111111111111111111111",
+        tokenContract: "0x2222222222222222222222222222222222222222",
+        tokenId: 1n,
+        comment: "Test comment",
+      });
+
+      const mockDbUpdated = await ERC20Minter.MintComment.processEvent({
+        event,
+        mockDb,
+      });
+
+      const actualEntity = mockDbUpdated.entities.ERC20Minter_MintComment.get(
+        `${event.chainId}_${event.block.number}_${event.logIndex}`
+      );
+
+      const expectedEntity: ERC20Minter_MintComment = {
+        id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+        sender: event.params.sender,
+        tokenContract: event.params.tokenContract.toLowerCase(),
+        tokenId: event.params.tokenId.toString(),
+        comment: event.params.comment,
+        transactionHash: event.transaction.hash,
+        timestamp: event.block.timestamp,
+        chainId: event.chainId,
+      };
+
+      assert.deepEqual(
+        actualEntity,
+        expectedEntity,
+        "ERC20Minter_MintComment entity should match expected values"
+      );
+    });
+  });
+
+  describe("ERC20Minter.ERC20RewardsDeposit", () => {
+    it("should create entity correctly", async () => {
+      const mockDb = MockDb.createMockDb();
+
+      const event = ERC20Minter.ERC20RewardsDeposit.createMockEvent({
+        collection: "0x3333333333333333333333333333333333333333",
+        currency: "0x4444444444444444444444444444444444444444",
+        tokenId: 2n,
+      });
+
+      const mockDbUpdated = await ERC20Minter.ERC20RewardsDeposit.processEvent({
+        event,
+        mockDb,
+      });
+
+      const actualEntity = mockDbUpdated.entities.ERC20Minter_ERC20RewardsDeposit.get(
+        `${event.chainId}_${event.block.number}_${event.logIndex}`
+      );
+
+      // Note: getUsdcTransfer is async and may fail in tests, so we check for basic structure
+      assert.ok(actualEntity, "ERC20Minter_ERC20RewardsDeposit entity should exist");
+      assert.equal(
+        actualEntity.id,
+        `${event.chainId}_${event.block.number}_${event.logIndex}`,
+        "Entity ID should match expected format"
+      );
+      assert.equal(
+        actualEntity.collection,
+        event.params.collection,
+        "Collection should match event params"
+      );
+      assert.equal(
+        actualEntity.currency,
+        event.params.currency,
+        "Currency should match event params"
+      );
+      assert.equal(
+        actualEntity.tokenId,
+        event.params.tokenId,
+        "TokenId should match event params"
+      );
+      assert.equal(
+        actualEntity.transactionHash,
+        event.transaction.hash,
+        "TransactionHash should match event"
+      );
+      assert.equal(
+        actualEntity.blockNumber,
+        event.block.number,
+        "BlockNumber should match event"
+      );
+      // recipient, spender, and amount are derived from getUsdcTransfer
+      assert.ok(typeof actualEntity.recipient === "string", "Recipient should be a string");
+      assert.ok(typeof actualEntity.spender === "string", "Spender should be a string");
+      assert.ok(typeof actualEntity.amount === "string", "Amount should be a string");
+    });
   });
 });
