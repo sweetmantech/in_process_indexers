@@ -35,6 +35,8 @@ describe("Event Handler Tests", () => {
         defaultAdmin: event.params.defaultAdmin,
         chainId: event.chainId,
         transactionHash: event.transaction.hash,
+        blockNumber: event.block.number,
+        blockTimestamp: event.block.timestamp,
       };
 
       assert.deepEqual(
