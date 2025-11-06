@@ -16,8 +16,6 @@ type CreatorFactory_SetupNewContract {
   defaultAdmin: String!
   chainId: Int!
   transactionHash: String!
-  blockNumber: Int!
-  blockTimestamp: Int!
 }
 
 type ERC20Minter_ERC20RewardsDeposit {
