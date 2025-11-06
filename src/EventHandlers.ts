@@ -18,7 +18,6 @@ ERC20Minter.MintComment.handler(async ({ event, context }) => {
 
   context.ERC20Minter_MintComment.set(entity);
 });
-
 CreatorFactory.SetupNewContract.handler(async ({ event, context }) => {
   const entity: CreatorFactory_SetupNewContract = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
@@ -28,10 +27,10 @@ CreatorFactory.SetupNewContract.handler(async ({ event, context }) => {
     chainId: event.chainId,
     transactionHash: event.transaction.hash,
     blockNumber: event.block.number,
+    blockTimestamp: event.block.timestamp,
   };
   context.CreatorFactory_SetupNewContract.set(entity);
 });
-
 ERC20Minter.ERC20RewardsDeposit.handler(async ({ event, context }) => {
   const usdcTransfer = await getUsdcTransfer(event);
 
