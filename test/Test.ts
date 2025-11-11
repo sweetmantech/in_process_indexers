@@ -13,10 +13,12 @@ describe("Event Handler Tests", () => {
     it("should create entity correctly", async () => {
       const mockDb = MockDb.createMockDb();
 
+      const defaultAdmin = "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd";
       const event = CreatorFactory.SetupNewContract.createMockEvent({
         newContract: "0x1234567890123456789012345678901234567890",
-        defaultAdmin: "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd",
+        defaultAdmin: defaultAdmin,
         contractURI: "https://example.com/contract",
+        defaultRoyaltyConfiguration: [0n, 0n, defaultAdmin], // Set payout recipient same as defaultAdmin so payoutRecipientNotDefaultAdmin is undefined
       });
 
       const mockDbUpdated = await CreatorFactory.SetupNewContract.processEvent({
@@ -30,9 +32,10 @@ describe("Event Handler Tests", () => {
 
       const expectedEntity: CreatorFactory_SetupNewContract = {
         id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-        address: event.params.newContract,
+        address: event.params.newContract.toLowerCase(),
         contractURI: event.params.contractURI,
-        defaultAdmin: event.params.defaultAdmin,
+        defaultAdmin: defaultAdmin.toLowerCase(),
+        payoutRecipientNotDefaultAdmin: undefined,
         chainId: event.chainId,
         transactionHash: event.transaction.hash,
         blockNumber: event.block.number,
@@ -87,7 +90,8 @@ describe("Event Handler Tests", () => {
   });
 
   describe("ERC20Minter.ERC20RewardsDeposit", () => {
-    it("should create entity correctly", async () => {
+    it("should create entity correctly", async function() {
+      this.timeout(10000); // Increase timeout since getUsdcTransfer makes async RPC calls
       const mockDb = MockDb.createMockDb();
 
       const event = ERC20Minter.ERC20RewardsDeposit.createMockEvent({
@@ -138,6 +142,7 @@ describe("Event Handler Tests", () => {
         "BlockNumber should match event"
       );
       // recipient, spender, and amount are derived from getUsdcTransfer
+      // When getUsdcTransfer fails, it returns zeroAddress and "0.000000"
       assert.ok(typeof actualEntity.recipient === "string", "Recipient should be a string");
       assert.ok(typeof actualEntity.spender === "string", "Spender should be a string");
       assert.ok(typeof actualEntity.amount === "string", "Amount should be a string");
