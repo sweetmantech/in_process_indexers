@@ -20,15 +20,12 @@ ERC20Minter.MintComment.handler(async ({ event, context }) => {
 });
 
 CreatorFactory.SetupNewContract.handler(async ({ event, context }) => {
-  const payoutRecipient = event.params.defaultRoyaltyConfiguration[2].toLowerCase();
-  const defaultAdmin = event.params.defaultAdmin.toLowerCase();
-  
   const entity: CreatorFactory_SetupNewContract = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
     address: event.params.newContract.toLowerCase(),
     contractURI: event.params.contractURI,
-    defaultAdmin: defaultAdmin,
-    payoutRecipientNotDefaultAdmin: payoutRecipient !== defaultAdmin ? payoutRecipient : undefined,
+    defaultAdmin: event.params.defaultAdmin.toLowerCase(),
+    payoutRecipient: event.params.defaultRoyaltyConfiguration[2].toLowerCase(),
     chainId: event.chainId,
     transactionHash: event.transaction.hash,
     blockNumber: event.block.number,
