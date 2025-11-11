@@ -14,7 +14,7 @@ type CreatorFactory_SetupNewContract {
   address: String!
   contractURI: String!
   defaultAdmin: String!
-  payoutRecipientNotDefaultAdmin: String
+  payoutRecipient: String
   chainId: Int!
   transactionHash: String!
   blockNumber: Int!
