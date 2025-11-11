@@ -18,12 +18,17 @@ ERC20Minter.MintComment.handler(async ({ event, context }) => {
 
   context.ERC20Minter_MintComment.set(entity);
 });
+
 CreatorFactory.SetupNewContract.handler(async ({ event, context }) => {
+  const payoutRecipient = event.params.defaultRoyaltyConfiguration[2].toLowerCase();
+  const defaultAdmin = event.params.defaultAdmin.toLowerCase();
+  
   const entity: CreatorFactory_SetupNewContract = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
-    address: event.params.newContract,
+    address: event.params.newContract.toLowerCase(),
     contractURI: event.params.contractURI,
-    defaultAdmin: event.params.defaultAdmin,
+    defaultAdmin: defaultAdmin,
+    payoutRecipientNotDefaultAdmin: payoutRecipient !== defaultAdmin ? payoutRecipient : undefined,
     chainId: event.chainId,
     transactionHash: event.transaction.hash,
     blockNumber: event.block.number,
@@ -31,6 +36,7 @@ CreatorFactory.SetupNewContract.handler(async ({ event, context }) => {
   };
   context.CreatorFactory_SetupNewContract.set(entity);
 });
+
 ERC20Minter.ERC20RewardsDeposit.handler(async ({ event, context }) => {
   const usdcTransfer = await getUsdcTransfer(event);
 
