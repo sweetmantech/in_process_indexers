@@ -14,11 +14,12 @@ describe("Event Handler Tests", () => {
       const mockDb = MockDb.createMockDb();
 
       const defaultAdmin = "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd";
+      const payoutRecipient = "0x5555555555555555555555555555555555555555";
       const event = CreatorFactory.SetupNewContract.createMockEvent({
         newContract: "0x1234567890123456789012345678901234567890",
         defaultAdmin: defaultAdmin,
         contractURI: "https://example.com/contract",
-        defaultRoyaltyConfiguration: [0n, 0n, defaultAdmin], // Set payout recipient same as defaultAdmin so payoutRecipient is undefined
+        defaultRoyaltyConfiguration: [0n, 0n, payoutRecipient],
       });
 
       const mockDbUpdated = await CreatorFactory.SetupNewContract.processEvent({
@@ -35,7 +36,7 @@ describe("Event Handler Tests", () => {
         address: event.params.newContract.toLowerCase(),
         contractURI: event.params.contractURI,
         defaultAdmin: defaultAdmin.toLowerCase(),
-        payoutRecipient: undefined,
+        payoutRecipient: payoutRecipient.toLowerCase(),
         chainId: event.chainId,
         transactionHash: event.transaction.hash,
         blockNumber: event.block.number,
