@@ -19,7 +19,7 @@ const getUsdcTransfer = async (
   event: ERC20Minter_ERC20RewardsDeposit_event
 ): Promise<Payout> => {
   try {
-    const receipt = await getTransactionReceipt(event.transaction.hash as Hash);
+    const receipt = await getTransactionReceipt(event.transaction.hash as Hash, event.chainId);
 
     const decodedLogs = parseEventLogs({
       abi: erc20Abi,
@@ -27,8 +27,7 @@ const getUsdcTransfer = async (
       strict: false, // ignore logs not found in the provided ABI
     });
 
-    const erc20MinterAddress =
-      "0xE27d9Dc88dAB82ACa3ebC49895c663C6a0CfA014".toLowerCase();
+    const erc20MinterAddresses = ["0x4538d7a07227d21597fb851a14057f00d15b4d5e".toLowerCase(), "0xE27d9Dc88dAB82ACa3ebC49895c663C6a0CfA014".toLowerCase()]
 
     // Only consider ERC20 Transfer logs with non-zero value
     const transferLogs = decodedLogs.filter((log) => {
@@ -41,14 +40,14 @@ const getUsdcTransfer = async (
     const outgoing = transferLogs.find((log) => {
       const from = (log as any).args?.from as string | undefined;
       return (
-        typeof from === "string" && from.toLowerCase() === erc20MinterAddress
+        typeof from === "string" && erc20MinterAddresses.includes(from.toLowerCase())
       );
     });
 
     // Incoming to minter (spender we care about)
     const incoming = transferLogs.find((log) => {
       const to = (log as any).args?.to as string | undefined;
-      return typeof to === "string" && to.toLowerCase() === erc20MinterAddress;
+      return typeof to === "string" && erc20MinterAddresses.includes(to.toLowerCase());
     });
 
     const rawAmount = ((outgoing?.args as UsdcTransfer | undefined)?.value ??

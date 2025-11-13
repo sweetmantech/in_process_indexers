@@ -29,6 +29,7 @@ type ERC20Minter_ERC20RewardsDeposit {
   recipient: String!
   spender: String!
   amount: String!
+  chainId: Int!
   transactionHash: String!
   blockNumber: Int!
 }
