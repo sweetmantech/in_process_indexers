@@ -36,7 +36,7 @@ CreatorFactory.SetupNewContract.handler(async ({ event, context }) => {
 
 ERC20Minter.ERC20RewardsDeposit.handler(async ({ event, context }) => {
   const usdcTransfer = await getUsdcTransfer(event);
-
+  if (usdcTransfer.amount === "0.000000") return;
   const entity: ERC20Minter_ERC20RewardsDeposit = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
     collection: event.params.collection,
