@@ -19,7 +19,7 @@ const getUsdcTransfer = async (
   event: ERC20Minter_ERC20RewardsDeposit_event
 ): Promise<Payout> => {
   try {
-    const receipt = await getTransactionReceipt(event.transaction.hash as Hash);
+    const receipt = await getTransactionReceipt(event.transaction.hash as Hash, event.chainId);
 
     const decodedLogs = parseEventLogs({
       abi: erc20Abi,
