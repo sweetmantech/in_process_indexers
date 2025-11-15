@@ -48,6 +48,7 @@ ERC1155.UpdatedPermissions.handler(async ({ event, context }) => {
 }, {
   wildcard: true,
   eventFilters: {
+    tokenId: BigInt(0),
     permissions: BigInt(2),
   }
 });
