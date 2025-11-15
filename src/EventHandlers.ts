@@ -42,6 +42,7 @@ ERC1155.UpdatedPermissions.handler(async ({ event, context }) => {
     user: event.params.user.toLowerCase(),
     permissions: Number(event.params.permissions),
     chainId: event.chainId,
+    blockTimestamp: event.block.timestamp,
   };
   context.ERC1155_UpdatedPermissions.set(entity);
 }, {
