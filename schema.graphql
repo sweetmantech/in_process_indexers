@@ -28,6 +28,7 @@ type ERC1155_UpdatedPermissions {
   user: String!
   permissions: Int!
   chainId: Int!
+  blockTimestamp: Int!
 }
 
 type ERC20Minter_ERC20RewardsDeposit {
