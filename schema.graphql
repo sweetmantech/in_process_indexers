@@ -21,6 +21,15 @@ type CreatorFactory_SetupNewContract {
   blockTimestamp: Int!
 }
 
+type ERC1155_UpdatedPermissions {
+  id: ID!
+  tokenContract: String!
+  tokenId: Int!
+  user: String!
+  permissions: Int!
+  chainId: Int!
+}
+
 type ERC20Minter_ERC20RewardsDeposit {
   id: ID!
   collection: String!
