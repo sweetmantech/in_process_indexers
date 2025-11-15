@@ -21,6 +21,14 @@ contracts:
           transaction_fields:
             - hash
 
+  - name: ERC1155
+    handler: src/EventHandlers.ts
+    events:
+      - event: UpdatedPermissions(uint256 indexed tokenId, address indexed user, uint256 indexed permissions)
+        field_selection:
+          transaction_fields:
+            - hash
+
 networks:
   - id: 84532
     start_block: 23208989
@@ -31,6 +39,7 @@ networks:
       - name: CreatorFactory
         address:
           - 0x6832A997D8616707C7b68721D6E9332E77da7F6C
+      - name: ERC1155
 
   - id: 8453
     start_block: 27712746
@@ -41,6 +50,7 @@ networks:
       - name: CreatorFactory
         address:
           - 0x540C18B7f99b3b599c6FeB99964498931c211858
+      - name: ERC1155
 
 unordered_multichain_mode: true
 preload_handlers: true

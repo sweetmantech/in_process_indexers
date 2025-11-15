@@ -1,7 +1,7 @@
 /*
  * Please refer to https://docs.envio.dev for a thorough guide on all Envio indexer features
  */
-import { ERC20Minter, ERC20Minter_MintComment, ERC20Minter_ERC20RewardsDeposit, CreatorFactory, CreatorFactory_SetupNewContract } from "generated";
+import { ERC20Minter, ERC20Minter_MintComment, ERC20Minter_ERC20RewardsDeposit, CreatorFactory, CreatorFactory_SetupNewContract, ERC1155, ERC1155_UpdatedPermissions } from "generated";
 import getUsdcTransfer from "../lib/getUsdcTransfer";
 
 ERC20Minter.MintComment.handler(async ({ event, context }) => {
@@ -32,6 +32,23 @@ CreatorFactory.SetupNewContract.handler(async ({ event, context }) => {
     blockTimestamp: event.block.timestamp,
   };
   context.CreatorFactory_SetupNewContract.set(entity);
+});
+
+ERC1155.UpdatedPermissions.handler(async ({ event, context }) => {
+  const entity: ERC1155_UpdatedPermissions = {
+    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    tokenContract: event.srcAddress.toLowerCase(),
+    tokenId: Number(event.params.tokenId),
+    user: event.params.user.toLowerCase(),
+    permissions: Number(event.params.permissions),
+    chainId: event.chainId,
+  };
+  context.ERC1155_UpdatedPermissions.set(entity);
+}, {
+  wildcard: true,
+  eventFilters: {
+    permissions: BigInt(2),
+  }
 });
 
 ERC20Minter.ERC20RewardsDeposit.handler(async ({ event, context }) => {
