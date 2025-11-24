@@ -1,9 +1,9 @@
 import assert from "assert";
-import { 
+import {
   TestHelpers,
   CreatorFactory_SetupNewContract,
   ERC20Minter_MintComment,
-  ERC20Minter_ERC20RewardsDeposit
+  ERC20Minter_ERC20RewardsDeposit,
 } from "generated";
 
 const { MockDb, CreatorFactory, ERC20Minter } = TestHelpers;
@@ -91,7 +91,7 @@ describe("Event Handler Tests", () => {
   });
 
   describe("ERC20Minter.ERC20RewardsDeposit", () => {
-    it("should create entity correctly", async function() {
+    it("should create entity correctly", async function () {
       this.timeout(10000); // Increase timeout since getUsdcTransfer makes async RPC calls
       const mockDb = MockDb.createMockDb();
 
@@ -103,7 +103,8 @@ describe("Event Handler Tests", () => {
 
       // Set a valid transaction hash (must start with 0x and be 66 chars)
       // Use type assertion to bypass read-only property
-      (event.transaction as { hash: string }).hash = "0x1234567890123456789012345678901234567890123456789012345678901234";
+      (event.transaction as { hash: string }).hash =
+        "0x1234567890123456789012345678901234567890123456789012345678901234";
 
       const mockDbUpdated = await ERC20Minter.ERC20RewardsDeposit.processEvent({
         event,
@@ -131,21 +132,13 @@ describe("Event Handler Tests", () => {
         event.params.currency,
         "Currency should match event params"
       );
-      assert.equal(
-        actualEntity.tokenId,
-        event.params.tokenId,
-        "TokenId should match event params"
-      );
+      assert.equal(actualEntity.tokenId, event.params.tokenId, "TokenId should match event params");
       assert.equal(
         actualEntity.transactionHash,
         event.transaction.hash,
         "TransactionHash should match event"
       );
-      assert.equal(
-        actualEntity.blockNumber,
-        event.block.number,
-        "BlockNumber should match event"
-      );
+      assert.equal(actualEntity.blockNumber, event.block.number, "BlockNumber should match event");
       // recipient, spender, and amount are derived from getUsdcTransfer
       // When getUsdcTransfer fails, it returns zeroAddress and "0.000000"
       assert.ok(typeof actualEntity.recipient === "string", "Recipient should be a string");
