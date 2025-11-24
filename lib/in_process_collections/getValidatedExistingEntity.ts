@@ -1,10 +1,12 @@
-import { InProcess_Collections } from "generated";
+import {
+  HandlerContext,
+  InProcess_Collections,
+  InProcessMoment_ContractMetadataUpdated_event,
+} from "generated";
 
 async function getValidatedExistingEntity(
-  event: { srcAddress: string; chainId: number; block: { timestamp: number } },
-  context: {
-    InProcess_Collections: { get: (id: string) => Promise<InProcess_Collections | undefined> };
-  }
+  event: InProcessMoment_ContractMetadataUpdated_event,
+  context: HandlerContext
 ): Promise<InProcess_Collections | undefined> {
   const collection = event.srcAddress.toLowerCase();
   const entityId = `${collection}_${event.chainId}`;
