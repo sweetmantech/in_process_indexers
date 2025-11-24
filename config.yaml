@@ -1,7 +1,15 @@
 # yaml-language-server: $schema=./node_modules/envio/evm.schema.json
 name: inprocess-indexers
 contracts:
-  - name: ERC20Minter
+  - name: InProcessCreatorFixedPriceSaleStrategy
+    handler: src/EventHandlers.ts
+    events:
+      - event: SaleSet (address indexed mediaContract, uint256 indexed tokenId, (uint64, uint64, uint64, uint96, address) salesConfig)
+        field_selection:
+          transaction_fields:
+            - hash
+
+  - name: InProcessERC20Minter
     handler: src/EventHandlers.ts
     events:
       - event: MintComment(address indexed sender, address indexed tokenContract, uint256 indexed tokenId, uint256 quantity, string comment)
@@ -12,19 +20,38 @@ contracts:
         field_selection:
           transaction_fields:
             - hash
-
-  - name: CreatorFactory
-    handler: src/EventHandlers.ts
-    events:
-      - event: SetupNewContract(address indexed newContract, address indexed creator, address indexed defaultAdmin, string contractURI, string name, (uint32, uint32, address) defaultRoyaltyConfiguration)
-        field_selection:  
+      - event: SaleSet (address indexed mediaContract, uint256 indexed tokenId, (uint64, uint64, uint64, uint256, address, address) salesConfig)
+        field_selection:
           transaction_fields:
             - hash
 
-  - name: ERC1155
+  - name: InProcessCreatorFactory
+    handler: src/EventHandlers.ts
+    events:
+      - event: SetupNewContract(address indexed newContract, address indexed creator, address indexed defaultAdmin, string contractURI, string name, (uint32, uint32, address) defaultRoyaltyConfiguration)
+        field_selection:
+          transaction_fields:
+            - hash
+
+  - name: InProcessMoment
     handler: src/EventHandlers.ts
     events:
       - event: UpdatedPermissions(uint256 indexed tokenId, address indexed user, uint256 indexed permissions)
+        field_selection:
+          transaction_fields:
+            - hash
+
+      - event: ContractMetadataUpdated(address indexed updater, string uri, string name)
+        field_selection:
+          transaction_fields:
+            - hash
+
+      - event: SetupNewToken (uint256 indexed tokenId, address indexed sender, string newURI, uint256 maxSupply)
+        field_selection:
+          transaction_fields:
+            - hash
+
+      - event: URI (string value, uint256 indexed id)
         field_selection:
           transaction_fields:
             - hash
@@ -33,24 +60,30 @@ networks:
   - id: 84532
     start_block: 23208989
     contracts:
-      - name: ERC20Minter
+      - name: InProcessERC20Minter
         address:
           - 0x4538d7a07227d21597fb851a14057f00d15b4d5e
-      - name: CreatorFactory
+      - name: InProcessCreatorFactory
         address:
           - 0x6832A997D8616707C7b68721D6E9332E77da7F6C
-      - name: ERC1155
+      - name: InProcessMoment
+      - name: InProcessCreatorFixedPriceSaleStrategy
+        address:
+          - 0x2994762aa0e4c750c51f333c10d81961faebe785
 
   - id: 8453
     start_block: 27712746
     contracts:
-      - name: ERC20Minter
+      - name: InProcessERC20Minter
         address:
           - 0xE27d9Dc88dAB82ACa3ebC49895c663C6a0CfA014
-      - name: CreatorFactory
+      - name: InProcessCreatorFactory
         address:
           - 0x540C18B7f99b3b599c6FeB99964498931c211858
-      - name: ERC1155
+      - name: InProcessMoment
+      - name: InProcessCreatorFixedPriceSaleStrategy
+        address:
+          - 0x2994762aa0e4c750c51f333c10d81961faebe785
 
 unordered_multichain_mode: true
 preload_handlers: true

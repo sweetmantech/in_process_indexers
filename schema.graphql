@@ -1,45 +1,71 @@
-type ERC20Minter_MintComment {
-  id: ID!
-  tokenContract: String!
-  tokenId: String!
-  sender: String!
-  comment: String!
-  timestamp: Int!
-  chainId: Int!
-  transactionHash: String!
-}
-
-type CreatorFactory_SetupNewContract {
+type InProcess_Collections {
   id: ID!
   address: String!
-  contractURI: String!
-  defaultAdmin: String!
-  payoutRecipient: String
-  chainId: Int!
-  transactionHash: String!
-  blockNumber: Int!
-  blockTimestamp: Int!
+  uri: String!
+  default_admin: String!
+  payout_recipient: String
+  chain_id: Int!
+  created_at: Int!
+  updated_at: Int!
+  transaction_hash: String!
 }
 
-type ERC1155_UpdatedPermissions {
+type InProcess_Moments {
   id: ID!
-  tokenContract: String!
-  tokenId: Int!
-  user: String!
-  permissions: Int!
-  chainId: Int!
-  blockTimestamp: Int!
+  collection: String!
+  token_id: Int!
+  uri: String!
+  max_supply: BigInt!
+  chain_id: Int!
+  created_at: Int!
+  updated_at: Int!
+  transaction_hash: String!
 }
 
-type ERC20Minter_ERC20RewardsDeposit {
+type InProcess_Sales {
+  id: ID!
+  collection: String!
+  token_id: Int!
+  sale_start: BigInt!
+  sale_end: BigInt!
+  max_tokens_per_address: BigInt!
+  price_per_token: BigInt!
+  funds_recipient: String!
+  currency: String!
+  chain_id: Int!
+  transaction_hash: String!
+  created_at: Int!
+}
+
+type InProcess_Moment_Admins {
+  id: ID!
+  admin: String!
+  collection: String!
+  token_id: Int!
+  chain_id: Int!
+  granted_at: Int!
+}
+
+type InProcess_Moment_Comments {
+  id: ID!
+  collection: String!
+  sender: String!
+  token_id: Int!
+  comment: String!
+  chain_id: Int!
+  commented_at: Int!
+  transaction_hash: String!
+}
+
+type InProcess_ERC20RewardsDeposit {
   id: ID!
   collection: String!
   currency: String!
-  tokenId: BigInt!
+  token_id: Int!
   recipient: String!
   spender: String!
   amount: String!
-  chainId: Int!
-  transactionHash: String!
-  blockNumber: Int!
+  chain_id: Int!
+  transaction_hash: String!
+  block_number: Int!
 }
