@@ -1,5 +1,5 @@
 import { InProcessCreatorFactory, InProcessMoment, InProcess_Collections } from "generated";
-import getValidatedExistingEntity from "../../lib/in_process_collections/getValidatedExistingEntity";
+import getValidateExistingEntity from "../../lib/in_process_collections/getValidateExistingEntity";
 
 // Register ERC1155 contracts dynamically when they're created by the factory
 InProcessCreatorFactory.SetupNewContract.contractRegister(({ event, context }) => {
@@ -26,7 +26,7 @@ InProcessCreatorFactory.SetupNewContract.handler(async ({ event, context }) => {
 InProcessMoment.ContractMetadataUpdated.handler(async ({ event, context }) => {
   if (event.params.uri === "") return;
 
-  const existingEntity = await getValidatedExistingEntity(event, context);
+  const existingEntity = await getValidateExistingEntity(event, context);
 
   if (!existingEntity) {
     return;

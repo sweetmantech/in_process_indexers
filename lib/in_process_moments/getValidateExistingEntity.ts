@@ -1,6 +1,6 @@
 import { InProcessMoment_URI_event, HandlerContext, InProcess_Moments } from "generated";
 
-async function getValidateExisitingEntity(
+async function getValidateExistingEntity(
   event: InProcessMoment_URI_event,
   context: HandlerContext
 ): Promise<InProcess_Moments | undefined> {
@@ -21,4 +21,4 @@ async function getValidateExisitingEntity(
   return existingEntity;
 }
 
-export default getValidateExisitingEntity;
+export default getValidateExistingEntity;

@@ -4,7 +4,7 @@ import {
   InProcessMoment_ContractMetadataUpdated_event,
 } from "generated";
 
-async function getValidatedExistingEntity(
+async function getValidateExistingEntity(
   event: InProcessMoment_ContractMetadataUpdated_event,
   context: HandlerContext
 ): Promise<InProcess_Collections | undefined> {
@@ -24,4 +24,4 @@ async function getValidatedExistingEntity(
   return existingEntity;
 }
 
-export default getValidatedExistingEntity;
+export default getValidateExistingEntity;
