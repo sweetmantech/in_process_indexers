@@ -1,5 +1,5 @@
 import {
-  HandlerContext,
+  handlerContext,
   InProcess_Sales,
   InProcessCreatorFixedPriceSaleStrategy_SaleSet_event,
   InProcessERC20Minter_SaleSet_event,
@@ -8,7 +8,7 @@ import { zeroAddress } from "viem";
 
 async function getLatestSale(
   event: InProcessCreatorFixedPriceSaleStrategy_SaleSet_event | InProcessERC20Minter_SaleSet_event,
-  context: HandlerContext
+  context: handlerContext
 ): Promise<InProcess_Sales> {
   const entityId = `${event.params.mediaContract.toLowerCase()}_${Number(event.params.tokenId)}_${event.chainId}`;
 

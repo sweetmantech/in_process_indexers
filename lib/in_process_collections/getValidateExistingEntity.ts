@@ -1,12 +1,12 @@
 import {
-  HandlerContext,
+  handlerContext,
   InProcess_Collections,
   InProcessMoment_ContractMetadataUpdated_event,
 } from "generated";
 
 async function getValidateExistingEntity(
   event: InProcessMoment_ContractMetadataUpdated_event,
-  context: HandlerContext
+  context: handlerContext
 ): Promise<InProcess_Collections | undefined> {
   const collection = event.srcAddress.toLowerCase();
   const entityId = `${collection}_${event.chainId}`;

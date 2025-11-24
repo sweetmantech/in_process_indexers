@@ -1,8 +1,8 @@
-import { InProcessMoment_URI_event, HandlerContext, InProcess_Moments } from "generated";
+import { InProcessMoment_URI_event, handlerContext, InProcess_Moments } from "generated";
 
 async function getValidateExistingEntity(
   event: InProcessMoment_URI_event,
-  context: HandlerContext
+  context: handlerContext
 ): Promise<InProcess_Moments | undefined> {
   const collection = event.srcAddress.toLowerCase();
   const tokenId = Number(event.params.id);
