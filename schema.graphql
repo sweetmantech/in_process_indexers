@@ -46,6 +46,14 @@ type InProcess_Moment_Admins {
   granted_at: Int!
 }
 
+type InProcess_Collection_Admins {
+  id: ID!
+  admin: String!
+  collection: String!
+  chain_id: Int!
+  granted_at: Int!
+}
+
 type InProcess_Moment_Comments {
   id: ID!
   collection: String!
