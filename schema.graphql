@@ -51,7 +51,7 @@ type InProcess_Moment_Comments {
   collection: String!
   sender: String!
   token_id: Int!
-  comment: String!
+  comment: String
   chain_id: Int!
   commented_at: Int!
   transaction_hash: String!
