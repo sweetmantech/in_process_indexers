@@ -69,12 +69,12 @@ describe("Event Handler Tests", () => {
         mockDb,
       });
 
-      const entityId = `${event.chainId}_${event.block.number}_${event.logIndex}`;
+      const entityId = `${event.params.tokenContract.toLowerCase()}_${Number(event.params.tokenId)}_${event.chainId}_${event.block.number}_${event.logIndex}`;
       const actualEntity = await mockDbUpdated.entities.InProcess_Moment_Comments.get(entityId);
 
       const expectedEntity: InProcess_Moment_Comments = {
         id: entityId,
-        sender: event.params.sender,
+        sender: event.params.sender.toLowerCase(),
         collection: event.params.tokenContract.toLowerCase(),
         token_id: Number(event.params.tokenId),
         comment: event.params.comment,
@@ -212,7 +212,7 @@ describe("Event Handler Tests", () => {
         mockDb,
       });
 
-      const entityId = `${event.chainId}_${event.block.number}_${event.logIndex}`;
+      const entityId = `${event.srcAddress.toLowerCase()}_${event.chainId}_${event.params.tokenId.toString()}_${event.params.user.toLowerCase()}`;
       const actualEntity = await mockDbUpdated.entities.InProcess_Moment_Admins.get(entityId);
 
       const expectedEntity: InProcess_Moment_Admins = {
