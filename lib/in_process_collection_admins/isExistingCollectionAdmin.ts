@@ -14,7 +14,5 @@ export async function isExistingCollectionAdmin(
   const entityId = entity.id;
   const existingEntity = await context.InProcess_Collection_Admins.get(entityId);
 
-  if (!existingEntity) return false;
-
-  return true;
+  return !!existingEntity;
 }
