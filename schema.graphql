@@ -37,19 +37,11 @@ type InProcess_Sales {
   created_at: Int!
 }
 
-type InProcess_Moment_Admins {
+type InProcess_Admins {
   id: ID!
   admin: String!
   collection: String!
   token_id: Int!
-  chain_id: Int!
-  granted_at: Int!
-}
-
-type InProcess_Collection_Admins {
-  id: ID!
-  admin: String!
-  collection: String!
   chain_id: Int!
   granted_at: Int!
 }
