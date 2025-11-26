@@ -4,7 +4,7 @@ import type {
   InProcess_Collections,
   InProcess_Moment_Comments,
   InProcess_Moments,
-  InProcess_Moment_Admins,
+  InProcess_Admins,
 } from "generated";
 
 const { MockDb, InProcessCreatorFactory, InProcessERC20Minter, InProcessMoment } = TestHelpers;
@@ -192,7 +192,7 @@ describe("Event Handler Tests", () => {
   });
 
   describe("InProcessMoment.UpdatedPermissions", () => {
-    it("should create InProcess_Moment_Admins entity correctly", async () => {
+    it("should create InProcess_Admins entity correctly", async () => {
       const mockDb = MockDb.createMockDb();
 
       const collection = "0x1234567890123456789012345678901234567890";
@@ -213,9 +213,9 @@ describe("Event Handler Tests", () => {
       });
 
       const entityId = `${event.srcAddress.toLowerCase()}_${event.chainId}_${event.params.tokenId.toString()}_${event.params.user.toLowerCase()}`;
-      const actualEntity = await mockDbUpdated.entities.InProcess_Moment_Admins.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.InProcess_Admins.get(entityId);
 
-      const expectedEntity: InProcess_Moment_Admins = {
+      const expectedEntity: InProcess_Admins = {
         id: entityId,
         collection: collection.toLowerCase(),
         token_id: tokenId,
@@ -227,7 +227,7 @@ describe("Event Handler Tests", () => {
       assert.deepEqual(
         actualEntity,
         expectedEntity,
-        "InProcess_Moment_Admins entity should match expected values"
+        "InProcess_Admins entity should match expected values"
       );
     });
   });
