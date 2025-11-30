@@ -13,7 +13,7 @@ InProcessERC20Minter.ERC20RewardsDeposit.handler(async ({ event, context }) => {
     spender: usdcTransfer.spender,
     amount: usdcTransfer.amount,
     transaction_hash: event.transaction.hash,
-    block_number: event.block.number,
+    transferred_at: event.block.timestamp,
   };
 
   context.InProcess_ERC20RewardsDeposit.set(entity);
