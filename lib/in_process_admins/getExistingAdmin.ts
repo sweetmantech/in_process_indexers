@@ -18,5 +18,5 @@ export async function getExistingAdmin(entity: InProcess_Admins, context: handle
       updated_at: entity.updated_at,
     };
 
-  return entity;
+  return existingEntity;
 }
