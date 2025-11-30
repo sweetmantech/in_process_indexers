@@ -43,7 +43,8 @@ type InProcess_Admins {
   collection: String!
   token_id: Int!
   chain_id: Int!
-  granted_at: Int!
+  permission: Int!
+  updated_at: Int!
 }
 
 type InProcess_Moment_Comments {
@@ -67,5 +68,5 @@ type InProcess_ERC20RewardsDeposit {
   amount: String!
   chain_id: Int!
   transaction_hash: String!
-  block_number: Int!
+  transferred_at: Int!
 }

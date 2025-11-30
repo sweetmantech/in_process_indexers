@@ -1,6 +1,6 @@
 import { InProcessMoment, InProcess_Admins } from "generated";
 import { FACTORY_ADDRESSES } from "../../lib/consts";
-import { isExistingAdmin } from "../../lib/in_process_admins/isExistingAdmin";
+import { getExistingAdmin } from "../../lib/in_process_admins/getExistingAdmin";
 
 InProcessMoment.UpdatedPermissions.handler(
   async ({ event, context }) => {
@@ -10,19 +10,24 @@ InProcessMoment.UpdatedPermissions.handler(
       token_id: Number(event.params.tokenId),
       admin: event.params.user.toLowerCase(),
       chain_id: event.chainId,
-      granted_at: event.block.timestamp,
+      permission: Number(event.params.permissions),
+      updated_at: event.block.timestamp,
     };
 
     if (FACTORY_ADDRESSES.includes(event.params.user.toLowerCase())) return;
 
-    const existingEntity = await isExistingAdmin(entity, context);
-    if (existingEntity) return;
+    const existingEntity = await getExistingAdmin(entity, context);
 
-    context.InProcess_Admins.set(entity);
+    context.InProcess_Admins.set(existingEntity);
   },
   {
-    eventFilters: {
-      permissions: BigInt(2),
-    },
+    eventFilters: [
+      {
+        permissions: BigInt(2),
+      },
+      {
+        permissions: BigInt(0),
+      },
+    ],
   }
 );

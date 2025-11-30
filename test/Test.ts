@@ -138,7 +138,11 @@ describe("Event Handler Tests", () => {
         event.transaction.hash,
         "TransactionHash should match event"
       );
-      assert.equal(actualEntity.block_number, event.block.number, "BlockNumber should match event");
+      assert.equal(
+        actualEntity.transferred_at,
+        event.block.timestamp,
+        "TransferredAt should match event timestamp"
+      );
       assert.equal(actualEntity.chain_id, event.chainId, "ChainId should match event");
       // recipient, spender, and amount are derived from getUsdcTransfer
       // When getUsdcTransfer fails, it returns zeroAddress and "0.000000"
@@ -221,7 +225,8 @@ describe("Event Handler Tests", () => {
         token_id: tokenId,
         admin: admin.toLowerCase(),
         chain_id: event.chainId,
-        granted_at: event.block.timestamp,
+        permission: Number(event.params.permissions),
+        updated_at: event.block.timestamp,
       };
 
       assert.deepEqual(
