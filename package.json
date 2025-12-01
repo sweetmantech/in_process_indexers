@@ -1,13 +1,14 @@
 {
   "name": "inprocess-hyper-indexer",
   "version": "0.1.0",
+  "type": "commonjs",
   "scripts": {
     "clean": "tsc --clean",
-    "build": "tsc --build",
+    "build": "tsc --build && tsc-alias",
     "watch": "tsc --watch",
     "mocha": "ts-mocha test/**/*.ts",
     "codegen": "envio codegen",
-    "dev": "envio dev",
+    "dev": "tsc-alias && envio dev",
     "start": "envio start",
     "test": "pnpm mocha",
     "format": "prettier --write .",
@@ -25,6 +26,7 @@
   },
   "dependencies": {
     "envio": "2.32.2",
+    "tsc-alias": "^1.8.16",
     "viem": "^2.37.5"
   },
   "optionalDependencies": {

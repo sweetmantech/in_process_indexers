@@ -1,5 +1,5 @@
 import { InProcessMoment, InProcess_Moments } from "generated";
-import getValidateExistingEntity from "../../lib/in_process_moments/getValidateExistingEntity";
+import getValidateExistingEntity from "@/lib/in_process_moments/getValidateExistingEntity";
 
 InProcessMoment.SetupNewToken.handler(async ({ event, context }) => {
   const collection = event.srcAddress.toLowerCase();

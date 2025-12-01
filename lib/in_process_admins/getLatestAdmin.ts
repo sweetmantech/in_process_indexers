@@ -7,7 +7,7 @@ import { handlerContext, InProcess_Admins } from "generated";
  * @param context - The storage context containing InProcess_Admins
  * @returns True if the entity exists, false otherwise
  */
-export async function getExistingAdmin(entity: InProcess_Admins, context: handlerContext) {
+export async function getLatestAdmin(entity: InProcess_Admins, context: handlerContext) {
   const existingEntity = await context.InProcess_Admins.get(entity.id);
 
   if (!existingEntity) return entity;

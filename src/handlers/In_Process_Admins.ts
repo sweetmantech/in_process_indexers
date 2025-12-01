@@ -1,6 +1,6 @@
 import { InProcessMoment, InProcess_Admins } from "generated";
-import { FACTORY_ADDRESSES } from "../../lib/consts";
-import { getExistingAdmin } from "../../lib/in_process_admins/getExistingAdmin";
+import { FACTORY_ADDRESSES } from "@/lib/consts";
+import { getLatestAdmin } from "@/lib/in_process_admins/getLatestAdmin";
 
 InProcessMoment.UpdatedPermissions.handler(
   async ({ event, context }) => {
@@ -16,9 +16,9 @@ InProcessMoment.UpdatedPermissions.handler(
 
     if (FACTORY_ADDRESSES.includes(event.params.user.toLowerCase())) return;
 
-    const existingEntity = await getExistingAdmin(entity, context);
+    const latestAdmin = await getLatestAdmin(entity, context);
 
-    context.InProcess_Admins.set(existingEntity);
+    context.InProcess_Admins.set(latestAdmin);
   },
   {
     eventFilters: [

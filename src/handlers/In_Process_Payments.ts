@@ -1,5 +1,5 @@
 import { InProcessERC20Minter, InProcess_ERC20RewardsDeposit } from "generated";
-import getUsdcTransfer from "../../lib/getUsdcTransfer";
+import getUsdcTransfer from "@/lib/getUsdcTransfer";
 
 InProcessERC20Minter.ERC20RewardsDeposit.handler(async ({ event, context }) => {
   const usdcTransfer = await getUsdcTransfer(event);

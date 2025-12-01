@@ -10,7 +10,10 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "module": "CommonJS"
+    "module": "CommonJS",
+    "paths": {
+      "@/*": ["./*"]
+    }
   },
   "include": ["src", "test"]
 }
