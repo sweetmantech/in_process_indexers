@@ -10,7 +10,22 @@
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
-    "module": "CommonJS"
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"],
+    "transpileOnly": true,
+    "esm": false,
+    "compilerOptions": {
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "target": "es2020"
+    }
   },
   "include": ["src", "test"]
 }
