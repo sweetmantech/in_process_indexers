@@ -1,12 +1,11 @@
 {
   "name": "inprocess-hyper-indexer",
   "version": "0.1.0",
-  "type": "commonjs",
   "scripts": {
     "clean": "tsc --clean",
-    "build": "tsc --build && tsc-alias",
+    "build": "tsc --build",
     "watch": "tsc --watch",
-    "mocha": "ts-mocha test/**/*.ts",
+    "mocha": "mocha --config .mocharc.json",
     "codegen": "envio codegen",
     "dev": "tsc-alias && envio dev",
     "start": "envio start",
@@ -22,6 +21,8 @@
     "mocha": "10.2.0",
     "prettier": "^3.6.2",
     "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^3.15.0",
     "typescript": "5.2.2"
   },
   "dependencies": {
