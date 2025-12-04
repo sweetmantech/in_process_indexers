@@ -19,6 +19,7 @@ describe("Event Handler Tests", () => {
       const newContract = "0x1234567890123456789012345678901234567890";
       const event = InProcessCreatorFactory.SetupNewContract.createMockEvent({
         newContract: newContract,
+        name: "Test Collection",
         defaultAdmin: defaultAdmin,
         contractURI: "https://example.com/contract",
         defaultRoyaltyConfiguration: [0n, 0n, payoutRecipient],
@@ -36,6 +37,7 @@ describe("Event Handler Tests", () => {
       const expectedEntity: InProcess_Collections = {
         id: entityId,
         address: collection,
+        name: event.params.name,
         uri: event.params.contractURI,
         default_admin: defaultAdmin.toLowerCase(),
         payout_recipient: payoutRecipient.toLowerCase(),
