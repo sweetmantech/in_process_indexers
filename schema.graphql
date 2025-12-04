@@ -1,6 +1,7 @@
 type InProcess_Collections {
   id: ID!
   address: String!
+  name: String!
   uri: String!
   default_admin: String!
   payout_recipient: String!

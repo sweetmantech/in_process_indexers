@@ -12,6 +12,7 @@ InProcessCreatorFactory.SetupNewContract.handler(async ({ event, context }) => {
   const entity: InProcess_Collections = {
     id: `${collection}_${event.chainId}`,
     address: collection,
+    name: event.params.name,
     uri: event.params.contractURI,
     default_admin: event.params.defaultAdmin.toLowerCase(),
     payout_recipient: event.params.defaultRoyaltyConfiguration[2].toLowerCase(),
@@ -34,8 +35,9 @@ InProcessMoment.ContractMetadataUpdated.handler(async ({ event, context }) => {
 
   const entity: InProcess_Collections = {
     ...existingEntity,
-    updated_at: event.block.timestamp,
+    name: event.params.name,
     uri: event.params.uri,
+    updated_at: event.block.timestamp,
   };
   context.InProcess_Collections.set(entity);
 });
