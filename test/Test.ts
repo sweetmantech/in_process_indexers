@@ -5,6 +5,7 @@ import type {
   InProcess_Moment_Comments,
   InProcess_Moments,
   InProcess_Admins,
+  InProcess_Payments,
 } from "generated";
 
 const { MockDb, InProcessCreatorFactory, InProcessERC20Minter, InProcessMoment } = TestHelpers;
@@ -115,10 +116,10 @@ describe("Event Handler Tests", () => {
       });
 
       const entityId = `${event.chainId}_${event.block.number}_${event.logIndex}`;
-      const actualEntity = await mockDbUpdated.entities.InProcess_ERC20RewardsDeposit.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.InProcess_Payments.get(entityId);
 
       // Note: getUsdcTransfer is async and may fail in tests, so we check for basic structure
-      assert.ok(actualEntity, "InProcess_ERC20RewardsDeposit entity should exist");
+      assert.ok(actualEntity, "InProcess_Payments entity should exist");
       assert.equal(actualEntity.id, entityId, "Entity ID should match expected format");
       assert.equal(
         actualEntity.collection,
