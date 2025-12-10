@@ -56,6 +56,10 @@ contracts:
           transaction_fields:
             - hash
 
+      - event: Purchased (address indexed sender, address indexed minter, uint256 indexed tokenId, uint256 quantity, uint256 value)
+        field_selection:
+          transaction_fields:
+            - hash
 networks:
   - id: 84532
     start_block: 23208989

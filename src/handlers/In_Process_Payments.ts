@@ -1,9 +1,11 @@
-import { InProcessERC20Minter, InProcess_ERC20RewardsDeposit } from "generated";
+import { InProcessERC20Minter, InProcessMoment, InProcess_Payments } from "generated";
 import getUsdcTransfer from "@/lib/getUsdcTransfer";
+import { formatEther, zeroAddress } from "viem";
+import getEthRecipient from "@/lib/getEthRecipient";
 
 InProcessERC20Minter.ERC20RewardsDeposit.handler(async ({ event, context }) => {
   const usdcTransfer = await getUsdcTransfer(event);
-  const entity: InProcess_ERC20RewardsDeposit = {
+  const entity: InProcess_Payments = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
     collection: event.params.collection,
     currency: event.params.currency,
@@ -16,5 +18,24 @@ InProcessERC20Minter.ERC20RewardsDeposit.handler(async ({ event, context }) => {
     transferred_at: event.block.timestamp,
   };
 
-  context.InProcess_ERC20RewardsDeposit.set(entity);
+  context.InProcess_Payments.set(entity);
+});
+
+InProcessMoment.Purchased.handler(async ({ event, context }) => {
+  const recipient = await getEthRecipient(event);
+  const entity: InProcess_Payments = {
+    id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
+    collection: event.srcAddress.toLowerCase(),
+    currency: zeroAddress,
+    token_id: Number(event.params.tokenId),
+    amount: formatEther(event.params.value),
+    spender: event.params.sender.toLowerCase(),
+    recipient: recipient.toLowerCase(),
+    chain_id: event.chainId,
+    transaction_hash: event.transaction.hash,
+    transferred_at: event.block.timestamp,
+  };
+
+  if (event.params.value === BigInt(0) || recipient === zeroAddress) return;
+  context.InProcess_Payments.set(entity);
 });
