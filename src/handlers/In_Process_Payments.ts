@@ -1,7 +1,11 @@
-import { InProcessERC20Minter, InProcessMoment, InProcess_Payments } from "generated";
+import {
+  InProcessERC20Minter,
+  InProcessMoment,
+  InProcess_Payments,
+} from "generated";
 import getUsdcTransfer from "@/lib/getUsdcTransfer";
 import { formatEther, zeroAddress } from "viem";
-import getEthRecipient from "@/lib/getEthRecipient";
+import extractPurchaseRecipientAndComment from "@/lib/extractPurchaseRecipientAndComment";
 
 InProcessERC20Minter.ERC20RewardsDeposit.handler(async ({ event, context }) => {
   const usdcTransfer = await getUsdcTransfer(event);
@@ -22,7 +26,12 @@ InProcessERC20Minter.ERC20RewardsDeposit.handler(async ({ event, context }) => {
 });
 
 InProcessMoment.Purchased.handler(async ({ event, context }) => {
-  const recipient = await getEthRecipient(event);
+  const { recipient, mintComment } = await extractPurchaseRecipientAndComment(event);
+
+  if (mintComment) {
+    context.InProcess_Moment_Comments.set(mintComment);
+  }
+
   const entity: InProcess_Payments = {
     id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
     collection: event.srcAddress.toLowerCase(),
