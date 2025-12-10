@@ -59,7 +59,7 @@ type InProcess_Moment_Comments {
   transaction_hash: String!
 }
 
-type InProcess_Payments {
+type InProcess_ERC20RewardsDeposit {
   id: ID!
   collection: String!
   currency: String!
