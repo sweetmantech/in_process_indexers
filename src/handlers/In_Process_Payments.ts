@@ -1,7 +1,6 @@
 import {
   InProcessERC20Minter,
   InProcessMoment,
-  InProcess_Moment_Comments,
   InProcess_Payments,
 } from "generated";
 import getUsdcTransfer from "@/lib/getUsdcTransfer";
