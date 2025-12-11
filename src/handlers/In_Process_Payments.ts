@@ -1,8 +1,4 @@
-import {
-  InProcessERC20Minter,
-  InProcessMoment,
-  InProcess_Payments,
-} from "generated";
+import { InProcessERC20Minter, InProcessMoment, InProcess_Payments } from "generated";
 import getUsdcTransfer from "@/lib/getUsdcTransfer";
 import { formatEther, zeroAddress } from "viem";
 import extractPurchaseRecipientAndComment from "@/lib/extractPurchaseRecipientAndComment";

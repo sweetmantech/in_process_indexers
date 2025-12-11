@@ -17,7 +17,7 @@ const extractPurchaseRecipientAndComment = async (
     // Convert event.value to hex format (padded to 64 characters for uint256)
     const eventValueHex = toHex(event.params.value, { size: 32 });
 
-    // Filter logs where data hex equals event.value, excluding MintComment events
+    // Filter logs where data hex equals event.value
     const matchingLogs = receipt.logs.filter((log) => {
       return log.data.toLowerCase() === eventValueHex.toLowerCase();
     });
