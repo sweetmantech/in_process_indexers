@@ -21,12 +21,14 @@ async function getEntity(
       token_id: Number(event.params.id),
       amount: Number(event.params.value),
       chain_id: event.chainId,
+      updated_at: event.block.timestamp,
     };
   }
 
   return {
     ...existingEntity,
     amount: existingEntity.amount + Number(event.params.value),
+    updated_at: event.block.timestamp,
   };
 }
 
