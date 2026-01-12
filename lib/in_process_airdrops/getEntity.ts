@@ -9,7 +9,7 @@ async function getEntity(
   context: handlerContext
 ): Promise<InProcess_Airdrops> {
   const collection = event.srcAddress.toLowerCase();
-  const entityId = `${collection}_${event.params.to}_${event.chainId}`;
+  const entityId = `${collection}_${event.params.id.toString()}_${event.chainId}_${event.params.to}`;
 
   const existingEntity = await context.InProcess_Airdrops.get(entityId);
 
