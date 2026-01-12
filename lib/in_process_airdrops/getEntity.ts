@@ -4,7 +4,7 @@ import {
   InProcessMoment_TransferSingle_event,
 } from "generated";
 
-async function getValidateExistingEntity(
+async function getEntity(
   event: InProcessMoment_TransferSingle_event,
   context: handlerContext
 ): Promise<InProcess_Airdrops> {
@@ -30,4 +30,4 @@ async function getValidateExistingEntity(
   };
 }
 
-export default getValidateExistingEntity;
+export default getEntity;
