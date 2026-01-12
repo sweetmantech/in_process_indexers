@@ -5,3 +5,4 @@ import "./handlers/In_Process_Moment_Comments";
 import "./handlers/In_Process_Moments";
 import "./handlers/In_Process_Payments";
 import "./handlers/In_Process_Sales";
+import "./handlers/In_Process_Aidrops";
