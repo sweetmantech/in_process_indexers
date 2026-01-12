@@ -66,6 +66,7 @@ type InProcess_Airdrops {
   token_id: Int!
   amount: Int!
   chain_id: Int!
+  updated_at: Int!
 }
 
 type InProcess_Payments {
