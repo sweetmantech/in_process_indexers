@@ -85,7 +85,7 @@ type InProcess_Payments {
 type InProcess_Collectors {
   id: ID!
   collection: String!
-  token_id: String!
+  token_id: Int!
   amount: Int!
   chain_id: Int!
   collector: String!
