@@ -1,9 +1,13 @@
-import { InProcessMoment, InProcess_Admins } from "generated";
+import {
+  InProcessMoment,
+  type InProcess_Admins,
+  type InProcessMoment_UpdatedPermissions_handlerArgs,
+} from "generated";
 import { FACTORY_ADDRESSES } from "@/lib/consts";
 import { getLatestAdmin } from "@/lib/in_process_admins/getLatestAdmin";
 
 InProcessMoment.UpdatedPermissions.handler(
-  async ({ event, context }) => {
+  async ({ event, context }: InProcessMoment_UpdatedPermissions_handlerArgs) => {
     const entity: InProcess_Admins = {
       id: `${event.srcAddress.toLowerCase()}_${event.chainId}_${event.params.tokenId.toString()}_${event.params.user.toLowerCase()}`,
       collection: event.srcAddress.toLowerCase(),

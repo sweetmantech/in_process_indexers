@@ -81,3 +81,14 @@ type InProcess_Payments {
   transaction_hash: String!
   transferred_at: Int!
 }
+
+type InProcess_Collectors {
+  id: ID!
+  collection: String!
+  token_id: String!
+  amount: Int!
+  chain_id: Int!
+  collector: String!
+  transaction_hash: String!
+  collected_at: Int!
+}

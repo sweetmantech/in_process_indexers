@@ -3,7 +3,7 @@ import { Address } from "viem";
 const getSmartWallet = async (address: Address): Promise<Address | undefined> => {
   try {
     const response = await fetch(
-      `https://inprocess.world/api/smartwallet?artist_wallet=${address}`
+      `https://api.inprocess.world/api/smartwallet?artist_wallet=${address}`
     );
     if (!response.ok) {
       throw new Error("Failed to get smart wallet");
