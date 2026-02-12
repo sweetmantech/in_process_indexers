@@ -2,6 +2,7 @@ import assert from "assert";
 import { TestHelpers } from "generated";
 import type {
   InProcess_Collections,
+  InProcess_Collectors,
   InProcess_Moment_Comments,
   InProcess_Moments,
   InProcess_Admins,
@@ -236,6 +237,67 @@ describe("Event Handler Tests", () => {
         actualEntity,
         expectedEntity,
         "InProcess_Admins entity should match expected values"
+      );
+    });
+  });
+
+  describe("InProcessMoment.TransferSingle (Collects)", () => {
+    it("should create InProcess_Collectors entity correctly", async function () {
+      this.timeout(10000);
+      const collection = "0x9f19bf91451238b706e596e0237a64811fae8e4b";
+      const defaultAdmin = "0xaf1452d289e22fbd0dea9d5097353c72a90fac33";
+      const collector = "0xcfbf34d385ea2d5eb947063b67ea226dcda3dc38";
+      const tokenId = 1n;
+      const amount = 3n;
+
+      const event = InProcessMoment.TransferSingle.createMockEvent({
+        operator: collector,
+        from: "0x0000000000000000000000000000000000000000",
+        to: collector,
+        id: tokenId,
+        value: amount,
+      });
+
+      (event as { srcAddress: string }).srcAddress = collection;
+
+      // Seed a collection entity so getCollectionEntity doesn't return early
+      // mockDb.entities.*.set() returns a new immutable mockDb
+      const mockDb = MockDb.createMockDb().entities.InProcess_Collections.set({
+        id: `${collection.toLowerCase()}_${event.chainId}`,
+        address: collection.toLowerCase(),
+        name: "Test Collection",
+        uri: "https://example.com/contract",
+        default_admin: defaultAdmin.toLowerCase(),
+        payout_recipient: defaultAdmin.toLowerCase(),
+        chain_id: event.chainId,
+        created_at: 0,
+        updated_at: 0,
+        transaction_hash: "0x0000000000000000000000000000000000000000000000000000000000000000",
+      });
+
+      const mockDbUpdated = await InProcessMoment.TransferSingle.processEvent({
+        event,
+        mockDb,
+      });
+
+      const entityId = `${collection.toLowerCase()}_${tokenId.toString()}_${event.chainId}_${event.block.number}_${event.logIndex}`;
+      const actualEntity = mockDbUpdated.entities.InProcess_Collectors.get(entityId);
+
+      const expectedEntity: InProcess_Collectors = {
+        id: entityId,
+        collection: collection.toLowerCase(),
+        token_id: tokenId.toString(),
+        amount: Number(amount),
+        chain_id: event.chainId,
+        collector: collector.toLowerCase(),
+        transaction_hash: event.transaction.hash,
+        collected_at: event.block.timestamp,
+      };
+
+      assert.deepEqual(
+        actualEntity,
+        expectedEntity,
+        "InProcess_Collectors entity should match expected values"
       );
     });
   });
