@@ -286,7 +286,7 @@ describe("Event Handler Tests", () => {
       const expectedEntity: InProcess_Collectors = {
         id: entityId,
         collection: collection.toLowerCase(),
-        token_id: tokenId.toString(),
+        token_id: Number(tokenId),
         amount: Number(amount),
         chain_id: event.chainId,
         collector: collector.toLowerCase(),
