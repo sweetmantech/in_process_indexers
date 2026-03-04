@@ -1,7 +1,7 @@
 import assert from "assert";
 import { TestHelpers } from "generated";
 import type { Catalog_Collections, Catalog_Moments, Primary_Sales } from "generated";
-import { encodeFunctionData } from "viem";
+import { encodeFunctionData, maxUint256 } from "viem";
 import { crFactoryAbi } from "../lib/abi/crFactoryAbi";
 import { USDC_ADDRESSES } from "../lib/consts";
 
@@ -264,8 +264,8 @@ describe("Catalog Event Handler Tests", () => {
         funds_recipient: fundsRecipient.toLowerCase(),
         currency: USDC_ADDRESSES[event.chainId] ?? "",
         sale_start: BigInt(0),
-        sale_end: undefined,
-        max_tokens_per_address: undefined,
+        sale_end: maxUint256,
+        max_tokens_per_address: maxUint256,
         chain_id: event.chainId,
         created_at: event.block.timestamp,
         transaction_hash: event.transaction.hash,
@@ -295,8 +295,8 @@ describe("Catalog Event Handler Tests", () => {
         funds_recipient: CREATOR.toLowerCase(),
         currency: USDC_ADDRESSES[event.chainId] ?? "",
         sale_start: BigInt(0),
-        sale_end: undefined,
-        max_tokens_per_address: undefined,
+        sale_end: maxUint256,
+        max_tokens_per_address: maxUint256,
         chain_id: event.chainId,
         created_at: futureTimestamp,
         transaction_hash: "0x0000000000000000000000000000000000000000000000000000000000000000",

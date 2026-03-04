@@ -90,7 +90,7 @@ type Secondary_Sales {
 
 Run after any `schema.graphql` change:
 
-```
+```bash
 pnpm codegen
 ```
 
