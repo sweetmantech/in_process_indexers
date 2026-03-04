@@ -33,6 +33,35 @@ contracts:
           transaction_fields:
             - hash
 
+  - name: CatalogReleaseFactory
+    handler: src/EventHandlers.ts
+    events:
+      - event: CRContractCreated (address indexed _contractAddress, address indexed _creator)
+        field_selection:
+          transaction_fields:
+            - hash
+            - input
+
+  - name: USDCFixedPriceController
+    handler: src/EventHandlers.ts
+    events:
+      - event: MintConfigurationUpdated (address indexed releaseContract, uint256 indexed tokenId, (uint96, address) configuration)
+        field_selection:
+          transaction_fields:
+            - hash
+
+  - name: CatalogRelease1155
+    handler: src/EventHandlers.ts
+    events:
+      - event: URI (string value, uint256 indexed id)
+        field_selection:
+          transaction_fields:
+            - hash
+      - event: TokenCreated (uint256 indexed _tokenId, address _contract, address indexed _artist, string _uri, bytes32 indexed _contentHash)
+        field_selection:
+          transaction_fields:
+            - hash
+
   - name: InProcessMoment
     handler: src/EventHandlers.ts
     events:
@@ -79,6 +108,7 @@ networks:
       - name: InProcessCreatorFixedPriceSaleStrategy
         address:
           - 0x2994762aa0e4c750c51f333c10d81961faebe785
+      - name: CatalogRelease1155
 
   - id: 8453
     start_block: 27712746
@@ -93,6 +123,13 @@ networks:
       - name: InProcessCreatorFixedPriceSaleStrategy
         address:
           - 0x2994762aa0e4c750c51f333c10d81961faebe785
+      - name: CatalogReleaseFactory
+        address:
+          - 0x94c2fab68ad0b7ca12e19d37b14ec662633d8025
+      - name: USDCFixedPriceController
+        address:
+          - 0xbcEaBFcC30a0e050367A6A5FaEa247A43C314709
+      - name: CatalogRelease1155
 
 unordered_multichain_mode: true
 preload_handlers: true
