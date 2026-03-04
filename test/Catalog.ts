@@ -1,10 +1,6 @@
 import assert from "assert";
 import { TestHelpers } from "generated";
-import type {
-  Catalog_Collections,
-  Catalog_Moments,
-  Catalog_Sales,
-} from "generated";
+import type { Catalog_Collections, Catalog_Moments, Catalog_Sales } from "generated";
 import { encodeFunctionData } from "viem";
 import { crFactoryAbi } from "../lib/abi/crFactoryAbi";
 import { USDC_ADDRESSES } from "../lib/consts";
@@ -114,7 +110,11 @@ describe("Catalog Event Handler Tests", () => {
 
       assert.ok(actualEntity, "entity should exist");
       assert.equal(actualEntity.uri, newUri, "uri should be updated");
-      assert.equal(actualEntity.updated_at, event.block.timestamp, "updated_at should be refreshed");
+      assert.equal(
+        actualEntity.updated_at,
+        event.block.timestamp,
+        "updated_at should be refreshed"
+      );
     });
 
     it("should not update if updated_at is more recent", async () => {
@@ -147,7 +147,11 @@ describe("Catalog Event Handler Tests", () => {
       const entityId = `${collection}_${event.chainId}`;
       const actualEntity = await mockDbUpdated.entities.Catalog_Collections.get(entityId);
 
-      assert.equal(actualEntity?.uri, originalUri, "uri should not change when entity is more recent");
+      assert.equal(
+        actualEntity?.uri,
+        originalUri,
+        "uri should not change when entity is more recent"
+      );
     });
   });
 
@@ -222,7 +226,11 @@ describe("Catalog Event Handler Tests", () => {
 
       assert.ok(actualEntity, "entity should exist");
       assert.equal(actualEntity.uri, newUri, "uri should be updated");
-      assert.equal(actualEntity.updated_at, event.block.timestamp, "updated_at should be refreshed");
+      assert.equal(
+        actualEntity.updated_at,
+        event.block.timestamp,
+        "updated_at should be refreshed"
+      );
     });
   });
 
