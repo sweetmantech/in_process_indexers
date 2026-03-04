@@ -73,14 +73,14 @@ describe("Event Handler Tests", () => {
         mockDb,
       });
 
-      const entityId = `${event.params.tokenContract.toLowerCase()}_${Number(event.params.tokenId)}_${event.chainId}_${event.block.number}_${event.logIndex}`;
+      const entityId = `${event.params.tokenContract.toLowerCase()}_${event.params.tokenId}_${event.chainId}_${event.block.number}_${event.logIndex}`;
       const actualEntity = await mockDbUpdated.entities.InProcess_Moment_Comments.get(entityId);
 
       const expectedEntity: InProcess_Moment_Comments = {
         id: entityId,
         sender: event.params.sender.toLowerCase(),
         collection: event.params.tokenContract.toLowerCase(),
-        token_id: Number(event.params.tokenId),
+        token_id: event.params.tokenId,
         comment: event.params.comment,
         commented_at: event.block.timestamp,
         transaction_hash: event.transaction.hash,
@@ -134,7 +134,7 @@ describe("Event Handler Tests", () => {
       );
       assert.equal(
         actualEntity.token_id,
-        Number(event.params.tokenId),
+        event.params.tokenId,
         "TokenId should match event params"
       );
       assert.equal(
@@ -161,9 +161,9 @@ describe("Event Handler Tests", () => {
       const mockDb = MockDb.createMockDb();
 
       const collection = "0x1234567890123456789012345678901234567890";
-      const tokenId = 1;
+      const tokenId = 1n;
       const event = InProcessMoment.SetupNewToken.createMockEvent({
-        tokenId: BigInt(tokenId),
+        tokenId,
         newURI: "https://example.com/token/1",
         maxSupply: 100n,
       });
@@ -204,10 +204,10 @@ describe("Event Handler Tests", () => {
       const mockDb = MockDb.createMockDb();
 
       const collection = "0x1234567890123456789012345678901234567890";
-      const tokenId = 1;
+      const tokenId = 1n;
       const admin = "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd";
       const event = InProcessMoment.UpdatedPermissions.createMockEvent({
-        tokenId: BigInt(tokenId),
+        tokenId,
         user: admin,
         permissions: 2n, // Required for the event filter
       });
@@ -286,8 +286,8 @@ describe("Event Handler Tests", () => {
       const expectedEntity: InProcess_Collectors = {
         id: entityId,
         collection: collection.toLowerCase(),
-        token_id: Number(tokenId),
-        amount: Number(amount),
+        token_id: tokenId,
+        amount,
         chain_id: event.chainId,
         collector: collector.toLowerCase(),
         transaction_hash: event.transaction.hash,

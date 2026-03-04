@@ -11,7 +11,7 @@ USDCFixedPriceController.MintConfigurationUpdated.handler(
     context.Primary_Sales.set(latestSale);
 
     const collection = event.params.releaseContract.toLowerCase();
-    const tokenId = Number(event.params.tokenId);
+    const tokenId = event.params.tokenId;
     const secondarySale: Secondary_Sales = {
       id: `${collection}_${tokenId}_${event.chainId}`,
       collection,

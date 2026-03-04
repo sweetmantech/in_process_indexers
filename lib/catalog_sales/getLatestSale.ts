@@ -10,7 +10,7 @@ async function getLatestSale(
   context: handlerContext
 ): Promise<Primary_Sales> {
   const collection = event.params.releaseContract.toLowerCase();
-  const tokenId = Number(event.params.tokenId);
+  const tokenId = event.params.tokenId;
   const entityId = `${collection}_${tokenId}_${event.chainId}`;
 
   const existingEntity = await context.Primary_Sales.get(entityId);

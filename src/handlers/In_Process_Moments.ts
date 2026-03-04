@@ -12,7 +12,7 @@ InProcessMoment.SetupNewToken.handler(
   async ({ event, context }: InProcessMoment_SetupNewToken_handlerArgs) => {
     const collection = event.srcAddress.toLowerCase();
     const chainId = event.chainId;
-    const tokenId = Number(event.params.tokenId);
+    const tokenId = event.params.tokenId;
     const entityId = `${collection}_${tokenId}_${chainId}`;
     const entity: InProcess_Moments = {
       id: entityId,
@@ -42,7 +42,7 @@ InProcessMoment.SetupNewToken.handler(
 InProcessMoment.UpdatedRoyalties.handler(
   async ({ event, context }: InProcessMoment_UpdatedRoyalties_handlerArgs) => {
     const collection = event.srcAddress.toLowerCase();
-    const tokenId = Number(event.params.tokenId);
+    const tokenId = event.params.tokenId;
     const id = `${collection}_${tokenId}_${event.chainId}`;
 
     const secondarySale: Secondary_Sales = {

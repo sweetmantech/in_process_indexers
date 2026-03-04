@@ -26,8 +26,8 @@ InProcessMoment.TransferSingle.handler(
     const collectEntity: InProcess_Collectors = {
       id: `${event.srcAddress.toLowerCase()}_${event.params.id.toString()}_${event.chainId}_${event.block.number}_${event.logIndex}`,
       collection: event.srcAddress.toLowerCase(),
-      token_id: Number(event.params.id),
-      amount: Number(event.params.value),
+      token_id: event.params.id,
+      amount: event.params.value,
       chain_id: event.chainId,
       collector: event.params.to.toLowerCase(),
       transaction_hash: event.transaction.hash,

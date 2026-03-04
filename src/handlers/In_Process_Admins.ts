@@ -11,7 +11,7 @@ InProcessMoment.UpdatedPermissions.handler(
     const entity: InProcess_Admins = {
       id: `${event.srcAddress.toLowerCase()}_${event.chainId}_${event.params.tokenId.toString()}_${event.params.user.toLowerCase()}`,
       collection: event.srcAddress.toLowerCase(),
-      token_id: Number(event.params.tokenId),
+      token_id: event.params.tokenId,
       admin: event.params.user.toLowerCase(),
       chain_id: event.chainId,
       permission: Number(event.params.permissions),

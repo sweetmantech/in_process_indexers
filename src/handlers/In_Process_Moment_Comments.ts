@@ -7,10 +7,10 @@ import {
 InProcessERC20Minter.MintComment.handler(
   async ({ event, context }: InProcessERC20Minter_MintComment_handlerArgs) => {
     const entity: InProcess_Moment_Comments = {
-      id: `${event.params.tokenContract.toLowerCase()}_${Number(event.params.tokenId)}_${event.chainId}_${event.block.number}_${event.logIndex}`,
+      id: `${event.params.tokenContract.toLowerCase()}_${event.params.tokenId}_${event.chainId}_${event.block.number}_${event.logIndex}`,
       sender: event.params.sender.toLowerCase(),
       collection: event.params.tokenContract.toLowerCase(),
-      token_id: Number(event.params.tokenId),
+      token_id: event.params.tokenId,
       comment: event.params.comment,
       commented_at: event.block.timestamp,
       transaction_hash: event.transaction.hash,

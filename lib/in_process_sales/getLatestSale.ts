@@ -10,14 +10,14 @@ async function getLatestSale(
   event: InProcessCreatorFixedPriceSaleStrategy_SaleSet_event | InProcessERC20Minter_SaleSet_event,
   context: handlerContext
 ): Promise<Primary_Sales> {
-  const entityId = `${event.params.mediaContract.toLowerCase()}_${Number(event.params.tokenId)}_${event.chainId}`;
+  const entityId = `${event.params.mediaContract.toLowerCase()}_${event.params.tokenId}_${event.chainId}`;
 
   const existingEntity = await context.Primary_Sales.get(entityId);
 
   const newEntity: Primary_Sales = {
     id: entityId,
     collection: event.params.mediaContract.toLowerCase(),
-    token_id: Number(event.params.tokenId),
+    token_id: event.params.tokenId,
     chain_id: event.chainId,
     created_at: event.block.timestamp,
     transaction_hash: event.transaction.hash,

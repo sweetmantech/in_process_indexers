@@ -44,7 +44,7 @@ InProcessCreatorFactory.SetupNewContract.handler(
     const secondarySale: Secondary_Sales = {
       id: `${collection}_0_${event.chainId}`,
       collection,
-      token_id: 0,
+      token_id: 0n,
       royalty_recipient: event.params.defaultRoyaltyConfiguration[2].toLowerCase(),
       royalty_bps: Number(event.params.defaultRoyaltyConfiguration[1]),
       chain_id: event.chainId,

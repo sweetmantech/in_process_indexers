@@ -180,7 +180,7 @@ describe("Catalog Event Handler Tests", () => {
       const expectedEntity: Catalog_Moments = {
         id: entityId,
         collection,
-        token_id: Number(tokenId),
+        token_id: tokenId,
         artist: ARTIST.toLowerCase(),
         uri: tokenUri,
         chain_id: event.chainId,
@@ -210,7 +210,7 @@ describe("Catalog Event Handler Tests", () => {
       const mockDb = MockDb.createMockDb().entities.Catalog_Moments.set({
         id: `${collection}_${tokenId}_${event.chainId}`,
         collection,
-        token_id: Number(tokenId),
+        token_id: tokenId,
         artist: ARTIST.toLowerCase(),
         uri: "ipfs://old-uri",
         chain_id: event.chainId,
@@ -253,13 +253,13 @@ describe("Catalog Event Handler Tests", () => {
       });
 
       const collection = COLLECTION.toLowerCase();
-      const entityId = `${collection}_${Number(tokenId)}_${event.chainId}`;
+      const entityId = `${collection}_${tokenId}_${event.chainId}`;
       const actualEntity = await mockDbUpdated.entities.Primary_Sales.get(entityId);
 
       const expectedEntity: Primary_Sales = {
         id: entityId,
         collection,
-        token_id: Number(tokenId),
+        token_id: tokenId,
         price_per_token: pricePerToken,
         funds_recipient: fundsRecipient.toLowerCase(),
         currency: USDC_ADDRESSES[event.chainId] ?? "",
@@ -288,9 +288,9 @@ describe("Catalog Event Handler Tests", () => {
       const futureTimestamp = event.block.timestamp + 9999;
 
       const mockDb = MockDb.createMockDb().entities.Primary_Sales.set({
-        id: `${collection}_${Number(tokenId)}_${event.chainId}`,
+        id: `${collection}_${tokenId}_${event.chainId}`,
         collection,
-        token_id: Number(tokenId),
+        token_id: tokenId,
         price_per_token: originalPrice,
         funds_recipient: CREATOR.toLowerCase(),
         currency: USDC_ADDRESSES[event.chainId] ?? "",
@@ -307,7 +307,7 @@ describe("Catalog Event Handler Tests", () => {
         mockDb,
       });
 
-      const entityId = `${collection}_${Number(tokenId)}_${event.chainId}`;
+      const entityId = `${collection}_${tokenId}_${event.chainId}`;
       const actualEntity = await mockDbUpdated.entities.Primary_Sales.get(entityId);
 
       assert.equal(actualEntity?.price_per_token, originalPrice, "price should not change");

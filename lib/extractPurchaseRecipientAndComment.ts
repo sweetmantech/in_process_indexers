@@ -41,10 +41,10 @@ const extractPurchaseRecipientAndComment = async (
       });
       const args = decoded.args as any;
       mintComment = {
-        id: `${args.tokenContract.toLowerCase()}_${Number(args.tokenId)}_${event.chainId}_${receipt.blockNumber}_${mintCommentLog.logIndex}`,
+        id: `${args.tokenContract.toLowerCase()}_${args.tokenId}_${event.chainId}_${receipt.blockNumber}_${mintCommentLog.logIndex}`,
         sender: args.sender.toLowerCase(),
         collection: args.tokenContract.toLowerCase(),
-        token_id: Number(args.tokenId),
+        token_id: args.tokenId,
         comment: args.comment,
         commented_at: event.block.timestamp,
         transaction_hash: event.transaction.hash,
