@@ -113,30 +113,31 @@ networks:
       - name: CatalogRelease1155
 
   - id: 8453
-    start_block: 27712746
+    start_block: 18357751
     contracts:
       # InProcess
       - name: InProcessERC20Minter
+        start_block: 27712746
         address:
           - 0xE27d9Dc88dAB82ACa3ebC49895c663C6a0CfA014
       - name: InProcessCreatorFactory
+        start_block: 27712746
         address:
           - 0x540C18B7f99b3b599c6FeB99964498931c211858
       - name: InProcessMoment
+        start_block: 27712746
       - name: InProcessCreatorFixedPriceSaleStrategy
+        start_block: 27712746
         address:
           - 0x2994762aa0e4c750c51f333c10d81961faebe785
       # Catalog
       - name: CatalogReleaseFactory
-        start_block: 18357751
         address:
           - 0x94c2fab68ad0b7ca12e19d37b14ec662633d8025
       - name: USDCFixedPriceController
-        start_block: 18357751
         address:
           - 0xbcEaBFcC30a0e050367A6A5FaEa247A43C314709
       - name: CatalogRelease1155
-        start_block: 18357751
 
 unordered_multichain_mode: true
 preload_handlers: true
