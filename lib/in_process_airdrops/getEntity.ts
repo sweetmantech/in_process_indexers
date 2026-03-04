@@ -18,8 +18,8 @@ async function getEntity(
       id: entityId,
       recipient: event.params.to,
       collection,
-      token_id: Number(event.params.id),
-      amount: Number(event.params.value),
+      token_id: event.params.id,
+      amount: event.params.value,
       chain_id: event.chainId,
       updated_at: event.block.timestamp,
     };
@@ -27,7 +27,7 @@ async function getEntity(
 
   return {
     ...existingEntity,
-    amount: existingEntity.amount + Number(event.params.value),
+    amount: existingEntity.amount + event.params.value,
     updated_at: event.block.timestamp,
   };
 }

@@ -10,7 +10,7 @@ CatalogRelease1155.TokenCreated.handler(
     const entity: Catalog_Moments = {
       id: `${collection}_${event.params._tokenId}_${event.chainId}`,
       collection,
-      token_id: Number(event.params._tokenId),
+      token_id: event.params._tokenId,
       artist: event.params._artist.toLowerCase(),
       uri: event.params._uri,
       chain_id: event.chainId,

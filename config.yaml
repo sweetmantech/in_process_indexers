@@ -94,6 +94,11 @@ contracts:
         field_selection:
           transaction_fields:
             - hash
+
+      - event: UpdatedRoyalties(uint256 indexed tokenId, address indexed user, (uint32, uint32, address) configuration)
+        field_selection:
+          transaction_fields:
+            - hash
 networks:
   - id: 84532
     start_block: 23208989
