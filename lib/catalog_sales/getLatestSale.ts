@@ -4,7 +4,6 @@ import {
   USDCFixedPriceController_MintConfigurationUpdated_event,
 } from "generated";
 import { USDC_ADDRESSES } from "@/lib/consts";
-import { maxUint256 } from "viem";
 
 async function getLatestSale(
   event: USDCFixedPriceController_MintConfigurationUpdated_event,
@@ -24,8 +23,8 @@ async function getLatestSale(
     funds_recipient: event.params.configuration[1].toLowerCase(),
     currency: USDC_ADDRESSES[event.chainId] ?? "",
     sale_start: BigInt(0),
-    sale_end: maxUint256,
-    max_tokens_per_address: maxUint256,
+    sale_end: undefined,
+    max_tokens_per_address: undefined,
     chain_id: event.chainId,
     created_at: event.block.timestamp,
     transaction_hash: event.transaction.hash,
