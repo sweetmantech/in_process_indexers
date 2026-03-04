@@ -98,6 +98,7 @@ networks:
   - id: 84532
     start_block: 23208989
     contracts:
+      # InProcess
       - name: InProcessERC20Minter
         address:
           - 0x4538d7a07227d21597fb851a14057f00d15b4d5e
@@ -108,11 +109,13 @@ networks:
       - name: InProcessCreatorFixedPriceSaleStrategy
         address:
           - 0x2994762aa0e4c750c51f333c10d81961faebe785
+      # Catalog
       - name: CatalogRelease1155
 
   - id: 8453
     start_block: 27712746
     contracts:
+      # InProcess
       - name: InProcessERC20Minter
         address:
           - 0xE27d9Dc88dAB82ACa3ebC49895c663C6a0CfA014
@@ -123,13 +126,17 @@ networks:
       - name: InProcessCreatorFixedPriceSaleStrategy
         address:
           - 0x2994762aa0e4c750c51f333c10d81961faebe785
+      # Catalog
       - name: CatalogReleaseFactory
+        start_block: 18357751
         address:
           - 0x94c2fab68ad0b7ca12e19d37b14ec662633d8025
       - name: USDCFixedPriceController
+        start_block: 18357751
         address:
           - 0xbcEaBFcC30a0e050367A6A5FaEa247A43C314709
       - name: CatalogRelease1155
+        start_block: 18357751
 
 unordered_multichain_mode: true
 preload_handlers: true
