@@ -1,6 +1,6 @@
 import {
   handlerContext,
-  InProcess_Sales,
+  Primary_Sales,
   InProcessCreatorFixedPriceSaleStrategy_SaleSet_event,
   InProcessERC20Minter_SaleSet_event,
 } from "generated";
@@ -9,12 +9,12 @@ import { zeroAddress } from "viem";
 async function getLatestSale(
   event: InProcessCreatorFixedPriceSaleStrategy_SaleSet_event | InProcessERC20Minter_SaleSet_event,
   context: handlerContext
-): Promise<InProcess_Sales> {
+): Promise<Primary_Sales> {
   const entityId = `${event.params.mediaContract.toLowerCase()}_${Number(event.params.tokenId)}_${event.chainId}`;
 
-  const existingEntity = await context.InProcess_Sales.get(entityId);
+  const existingEntity = await context.Primary_Sales.get(entityId);
 
-  const newEntity = {
+  const newEntity: Primary_Sales = {
     id: entityId,
     collection: event.params.mediaContract.toLowerCase(),
     token_id: Number(event.params.tokenId),

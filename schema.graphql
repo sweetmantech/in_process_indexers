@@ -23,16 +23,16 @@ type InProcess_Moments {
   transaction_hash: String!
 }
 
-type InProcess_Sales {
+type Primary_Sales {
   id: ID!
   collection: String!
   token_id: Int!
-  sale_start: BigInt!
-  sale_end: BigInt!
-  max_tokens_per_address: BigInt!
   price_per_token: BigInt!
   funds_recipient: String!
   currency: String!
+  sale_start: BigInt
+  sale_end: BigInt
+  max_tokens_per_address: BigInt
   chain_id: Int!
   transaction_hash: String!
   created_at: Int!
@@ -82,18 +82,6 @@ type InProcess_Payments {
   transferred_at: Int!
 }
 
-type Catalog_Sales {
-  id: ID!
-  collection: String!
-  token_id: Int!
-  price_per_token: BigInt!
-  funds_recipient: String!
-  currency: String!
-  chain_id: Int!
-  created_at: Int!
-  transaction_hash: String!
-}
-
 type Catalog_Moments {
   id: ID!
   collection: String!
@@ -127,4 +115,15 @@ type InProcess_Collectors {
   collector: String!
   transaction_hash: String!
   collected_at: Int!
+}
+
+type Secondary_Sales {
+  id: ID!
+  collection: String!
+  token_id: Int!
+  royalty_recipient: String!
+  royalty_bps: Int!
+  chain_id: Int!
+  updated_at: Int!
+  transaction_hash: String!
 }

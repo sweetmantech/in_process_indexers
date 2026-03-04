@@ -1,6 +1,6 @@
 import assert from "assert";
 import { TestHelpers } from "generated";
-import type { Catalog_Collections, Catalog_Moments, Catalog_Sales } from "generated";
+import type { Catalog_Collections, Catalog_Moments, Primary_Sales } from "generated";
 import { encodeFunctionData } from "viem";
 import { crFactoryAbi } from "../lib/abi/crFactoryAbi";
 import { USDC_ADDRESSES } from "../lib/consts";
@@ -254,15 +254,18 @@ describe("Catalog Event Handler Tests", () => {
 
       const collection = COLLECTION.toLowerCase();
       const entityId = `${collection}_${Number(tokenId)}_${event.chainId}`;
-      const actualEntity = await mockDbUpdated.entities.Catalog_Sales.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.Primary_Sales.get(entityId);
 
-      const expectedEntity: Catalog_Sales = {
+      const expectedEntity: Primary_Sales = {
         id: entityId,
         collection,
         token_id: Number(tokenId),
         price_per_token: pricePerToken,
         funds_recipient: fundsRecipient.toLowerCase(),
         currency: USDC_ADDRESSES[event.chainId] ?? "",
+        sale_start: BigInt(0),
+        sale_end: undefined,
+        max_tokens_per_address: undefined,
         chain_id: event.chainId,
         created_at: event.block.timestamp,
         transaction_hash: event.transaction.hash,
@@ -284,13 +287,16 @@ describe("Catalog Event Handler Tests", () => {
 
       const futureTimestamp = event.block.timestamp + 9999;
 
-      const mockDb = MockDb.createMockDb().entities.Catalog_Sales.set({
+      const mockDb = MockDb.createMockDb().entities.Primary_Sales.set({
         id: `${collection}_${Number(tokenId)}_${event.chainId}`,
         collection,
         token_id: Number(tokenId),
         price_per_token: originalPrice,
         funds_recipient: CREATOR.toLowerCase(),
         currency: USDC_ADDRESSES[event.chainId] ?? "",
+        sale_start: BigInt(0),
+        sale_end: undefined,
+        max_tokens_per_address: undefined,
         chain_id: event.chainId,
         created_at: futureTimestamp,
         transaction_hash: "0x0000000000000000000000000000000000000000000000000000000000000000",
@@ -302,7 +308,7 @@ describe("Catalog Event Handler Tests", () => {
       });
 
       const entityId = `${collection}_${Number(tokenId)}_${event.chainId}`;
-      const actualEntity = await mockDbUpdated.entities.Catalog_Sales.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.Primary_Sales.get(entityId);
 
       assert.equal(actualEntity?.price_per_token, originalPrice, "price should not change");
     });

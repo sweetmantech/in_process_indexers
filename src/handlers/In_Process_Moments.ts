@@ -1,8 +1,10 @@
 import {
   InProcessMoment,
   type InProcess_Moments,
+  type Secondary_Sales,
   type InProcessMoment_SetupNewToken_handlerArgs,
   type InProcessMoment_URI_handlerArgs,
+  type InProcessMoment_UpdatedRoyalties_handlerArgs,
 } from "generated";
 import getValidateExistingEntity from "@/lib/in_process_moments/getValidateExistingEntity";
 
@@ -24,6 +26,36 @@ InProcessMoment.SetupNewToken.handler(
       transaction_hash: event.transaction.hash,
     };
     context.InProcess_Moments.set(entity);
+
+    const contractBase = await context.Secondary_Sales.get(`${collection}_0_${chainId}`);
+    if (contractBase) {
+      const secondarySale: Secondary_Sales = {
+        ...contractBase,
+        id: entityId,
+        token_id: tokenId,
+      };
+      context.Secondary_Sales.set(secondarySale);
+    }
+  }
+);
+
+InProcessMoment.UpdatedRoyalties.handler(
+  async ({ event, context }: InProcessMoment_UpdatedRoyalties_handlerArgs) => {
+    const collection = event.srcAddress.toLowerCase();
+    const tokenId = Number(event.params.tokenId);
+    const id = `${collection}_${tokenId}_${event.chainId}`;
+
+    const secondarySale: Secondary_Sales = {
+      id,
+      collection,
+      token_id: tokenId,
+      royalty_recipient: event.params.configuration[2].toLowerCase(),
+      royalty_bps: Number(event.params.configuration[1]),
+      chain_id: event.chainId,
+      updated_at: event.block.timestamp,
+      transaction_hash: event.transaction.hash,
+    };
+    context.Secondary_Sales.set(secondarySale);
   }
 );
 

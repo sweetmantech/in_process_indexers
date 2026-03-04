@@ -2,6 +2,7 @@ import {
   InProcessCreatorFactory,
   InProcessMoment,
   type InProcess_Collections,
+  type Secondary_Sales,
   type InProcessCreatorFactory_SetupNewContract_event,
   type InProcessCreatorFactory_SetupNewContract_handlerArgs,
   type InProcessMoment_ContractMetadataUpdated_handlerArgs,
@@ -39,6 +40,18 @@ InProcessCreatorFactory.SetupNewContract.handler(
       transaction_hash: event.transaction.hash,
     };
     context.InProcess_Collections.set(entity);
+
+    const secondarySale: Secondary_Sales = {
+      id: `${collection}_0_${event.chainId}`,
+      collection,
+      token_id: 0,
+      royalty_recipient: event.params.defaultRoyaltyConfiguration[2].toLowerCase(),
+      royalty_bps: Number(event.params.defaultRoyaltyConfiguration[1]),
+      chain_id: event.chainId,
+      updated_at: event.block.timestamp,
+      transaction_hash: event.transaction.hash,
+    };
+    context.Secondary_Sales.set(secondarySale);
   }
 );
 
