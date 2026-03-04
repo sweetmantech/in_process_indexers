@@ -29,12 +29,15 @@ InProcessMoment.SetupNewToken.handler(
 
     const contractBase = await context.Secondary_Sales.get(`${collection}_0_${chainId}`);
     if (contractBase) {
-      const secondarySale: Secondary_Sales = {
-        ...contractBase,
-        id: entityId,
-        token_id: tokenId,
-      };
-      context.Secondary_Sales.set(secondarySale);
+      const existingTokenSale = await context.Secondary_Sales.get(entityId);
+      if (!existingTokenSale) {
+        const secondarySale: Secondary_Sales = {
+          ...contractBase,
+          id: entityId,
+          token_id: tokenId,
+        };
+        context.Secondary_Sales.set(secondarySale);
+      }
     }
   }
 );
