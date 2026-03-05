@@ -33,7 +33,6 @@ InProcessCreatorFactory.SetupNewContract.handler(
       name: event.params.name,
       uri: event.params.contractURI,
       default_admin: event.params.defaultAdmin.toLowerCase(),
-      payout_recipient: event.params.defaultRoyaltyConfiguration[2].toLowerCase(),
       chain_id: event.chainId,
       created_at: event.block.timestamp,
       updated_at: event.block.timestamp,
