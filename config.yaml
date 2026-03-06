@@ -61,6 +61,8 @@ contracts:
         field_selection:
           transaction_fields:
             - hash
+      - event: ContractPermissionsUpdated (address indexed user, uint256 authScope)
+      - event: TokenPermissionsUpdated (uint256 indexed tokenId, address indexed user, uint256 authScope)
 
   - name: InProcessMoment
     handler: src/EventHandlers.ts

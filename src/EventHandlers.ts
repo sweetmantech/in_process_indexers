@@ -9,3 +9,4 @@ import "./handlers/In_Process_Moments_Transfers";
 import "./handlers/Catalog_Collections";
 import "./handlers/Catalog_Moments";
 import "./handlers/Catalog_Sales";
+import "./handlers/Catalog_Admins";
