@@ -8,14 +8,14 @@ import type {
 } from "generated";
 import { encodeFunctionData, maxUint256 } from "viem";
 import { crFactoryAbi } from "../lib/abi/crFactoryAbi";
-import { USDC_ADDRESSES } from "../lib/consts";
+import {
+  USDC_ADDRESSES,
+  AUTH_SCOPE_OWNER,
+  AUTH_SCOPE_ARTIST,
+  AUTH_SCOPE_MANAGER,
+} from "../lib/consts";
 
 const { MockDb, CatalogReleaseFactory, CatalogRelease1155, USDCFixedPriceController } = TestHelpers;
-
-// auth scope bit flags
-const AUTH_SCOPE_OWNER = 1;
-const AUTH_SCOPE_ARTIST = 2;
-const AUTH_SCOPE_MANAGER = 4;
 
 const COLLECTION = "0x1234567890123456789012345678901234567890";
 const CREATOR = "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd";
@@ -281,7 +281,7 @@ describe("Catalog Event Handler Tests", () => {
 
       const event = CatalogRelease1155.ContractPermissionsUpdated.createMockEvent({
         user: ARTIST,
-        authScope: BigInt(AUTH_SCOPE_MANAGER),
+        authScope: BigInt(AUTH_SCOPE_OWNER),
       });
       (event as { srcAddress: string }).srcAddress = COLLECTION;
       (event.block as { timestamp: number }).timestamp = 2000;
@@ -303,7 +303,7 @@ describe("Catalog Event Handler Tests", () => {
       });
 
       const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
-      assert.equal(actualEntity?.auth_scope, AUTH_SCOPE_MANAGER, "auth_scope should be updated");
+      assert.equal(actualEntity?.auth_scope, AUTH_SCOPE_OWNER, "auth_scope should be updated");
       assert.equal(actualEntity?.updated_at, 2000, "updated_at should be refreshed");
     });
 
@@ -312,7 +312,7 @@ describe("Catalog Event Handler Tests", () => {
 
       const event = CatalogRelease1155.ContractPermissionsUpdated.createMockEvent({
         user: ARTIST,
-        authScope: BigInt(AUTH_SCOPE_MANAGER),
+        authScope: BigInt(AUTH_SCOPE_OWNER),
       });
       (event as { srcAddress: string }).srcAddress = COLLECTION;
 
@@ -335,7 +335,7 @@ describe("Catalog Event Handler Tests", () => {
       const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
       assert.equal(
         actualEntity?.auth_scope,
-        AUTH_SCOPE_MANAGER,
+        AUTH_SCOPE_OWNER,
         "same-block update should overwrite"
       );
     });
@@ -345,7 +345,7 @@ describe("Catalog Event Handler Tests", () => {
 
       const event = CatalogRelease1155.ContractPermissionsUpdated.createMockEvent({
         user: ARTIST,
-        authScope: BigInt(AUTH_SCOPE_MANAGER),
+        authScope: BigInt(AUTH_SCOPE_OWNER),
       });
       (event as { srcAddress: string }).srcAddress = COLLECTION;
 
@@ -372,6 +372,26 @@ describe("Catalog Event Handler Tests", () => {
         AUTH_SCOPE_OWNER | AUTH_SCOPE_ARTIST,
         "auth_scope should not change when entity is more recent"
       );
+    });
+
+    it("should skip pure MANAGER scope (cannot airdrop)", async () => {
+      const mockDb = MockDb.createMockDb();
+      const collection = COLLECTION.toLowerCase();
+
+      const event = CatalogRelease1155.ContractPermissionsUpdated.createMockEvent({
+        user: ARTIST,
+        authScope: BigInt(AUTH_SCOPE_MANAGER),
+      });
+      (event as { srcAddress: string }).srcAddress = COLLECTION;
+
+      const mockDbUpdated = await CatalogRelease1155.ContractPermissionsUpdated.processEvent({
+        event,
+        mockDb,
+      });
+
+      const entityId = `${collection}_${event.chainId}_0_${ARTIST.toLowerCase()}`;
+      const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
+      assert.equal(actualEntity, undefined, "pure MANAGER entity should not be stored");
     });
 
     it("should set auth_scope=0 when admin is removed", async () => {
@@ -429,6 +449,28 @@ describe("Catalog Event Handler Tests", () => {
       };
 
       assert.deepEqual(actualEntity, expectedEntity);
+    });
+
+    it("should skip pure MANAGER scope (cannot airdrop)", async () => {
+      const mockDb = MockDb.createMockDb();
+      const collection = COLLECTION.toLowerCase();
+      const tokenId = 3n;
+
+      const event = CatalogRelease1155.TokenPermissionsUpdated.createMockEvent({
+        tokenId,
+        user: ARTIST,
+        authScope: BigInt(AUTH_SCOPE_MANAGER),
+      });
+      (event as { srcAddress: string }).srcAddress = COLLECTION;
+
+      const mockDbUpdated = await CatalogRelease1155.TokenPermissionsUpdated.processEvent({
+        event,
+        mockDb,
+      });
+
+      const entityId = `${collection}_${event.chainId}_${tokenId}_${ARTIST.toLowerCase()}`;
+      const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
+      assert.equal(actualEntity, undefined, "pure MANAGER entity should not be stored");
     });
 
     it("should be stored separately from contract-level (token_id=0) entity", async () => {
