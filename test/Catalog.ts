@@ -261,7 +261,7 @@ describe("Catalog Event Handler Tests", () => {
       });
 
       const entityId = `${collection}_${event.chainId}_0_${ARTIST.toLowerCase()}`;
-      const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.Catalog_Admins.get(entityId);
 
       const expectedEntity: Catalog_Admins = {
         id: entityId,
@@ -302,7 +302,7 @@ describe("Catalog Event Handler Tests", () => {
         mockDb,
       });
 
-      const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.Catalog_Admins.get(entityId);
       assert.equal(actualEntity?.auth_scope, AUTH_SCOPE_OWNER, "auth_scope should be updated");
       assert.equal(actualEntity?.updated_at, 2000, "updated_at should be refreshed");
     });
@@ -332,7 +332,7 @@ describe("Catalog Event Handler Tests", () => {
         mockDb,
       });
 
-      const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.Catalog_Admins.get(entityId);
       assert.equal(
         actualEntity?.auth_scope,
         AUTH_SCOPE_OWNER,
@@ -366,7 +366,7 @@ describe("Catalog Event Handler Tests", () => {
         mockDb,
       });
 
-      const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.Catalog_Admins.get(entityId);
       assert.equal(
         actualEntity?.auth_scope,
         AUTH_SCOPE_OWNER | AUTH_SCOPE_ARTIST,
@@ -390,7 +390,7 @@ describe("Catalog Event Handler Tests", () => {
       });
 
       const entityId = `${collection}_${event.chainId}_0_${ARTIST.toLowerCase()}`;
-      const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.Catalog_Admins.get(entityId);
       assert.equal(actualEntity, undefined, "pure MANAGER entity should not be stored");
     });
 
@@ -410,7 +410,7 @@ describe("Catalog Event Handler Tests", () => {
       });
 
       const entityId = `${collection}_${event.chainId}_0_${ARTIST.toLowerCase()}`;
-      const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.Catalog_Admins.get(entityId);
 
       assert.ok(actualEntity, "entity should still exist after removal");
       assert.equal(actualEntity.auth_scope, 0, "auth_scope should be 0 when removed");
@@ -436,7 +436,7 @@ describe("Catalog Event Handler Tests", () => {
       });
 
       const entityId = `${collection}_${event.chainId}_${tokenId}_${ARTIST.toLowerCase()}`;
-      const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.Catalog_Admins.get(entityId);
 
       const expectedEntity: Catalog_Admins = {
         id: entityId,
@@ -469,7 +469,7 @@ describe("Catalog Event Handler Tests", () => {
       });
 
       const entityId = `${collection}_${event.chainId}_${tokenId}_${ARTIST.toLowerCase()}`;
-      const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.Catalog_Admins.get(entityId);
       assert.equal(actualEntity, undefined, "pure MANAGER entity should not be stored");
     });
 
@@ -503,8 +503,8 @@ describe("Catalog Event Handler Tests", () => {
       const contractEntityId = `${collection}_${contractEvent.chainId}_0_${ARTIST.toLowerCase()}`;
       const tokenEntityId = `${collection}_${tokenEvent.chainId}_${tokenId}_${ARTIST.toLowerCase()}`;
 
-      const contractEntity = db2.entities.Catalog_Admins.get(contractEntityId);
-      const tokenEntity = db2.entities.Catalog_Admins.get(tokenEntityId);
+      const contractEntity = await db2.entities.Catalog_Admins.get(contractEntityId);
+      const tokenEntity = await db2.entities.Catalog_Admins.get(tokenEntityId);
 
       assert.equal(contractEntity?.auth_scope, AUTH_SCOPE_OWNER, "contract-level scope");
       assert.equal(tokenEntity?.auth_scope, AUTH_SCOPE_ARTIST, "token-level scope");
