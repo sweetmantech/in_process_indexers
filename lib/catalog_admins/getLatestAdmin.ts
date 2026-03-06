@@ -4,7 +4,7 @@ export async function getLatestAdmin(entity: Catalog_Admins, context: handlerCon
   const existingEntity = await context.Catalog_Admins.get(entity.id);
 
   if (!existingEntity) return entity;
-  if (entity.updated_at > existingEntity.updated_at)
+  if (entity.updated_at >= existingEntity.updated_at)
     return {
       ...existingEntity,
       auth_scope: entity.auth_scope,

@@ -307,6 +307,39 @@ describe("Catalog Event Handler Tests", () => {
       assert.equal(actualEntity?.updated_at, 2000, "updated_at should be refreshed");
     });
 
+    it("should update auth_scope when timestamps are equal (same block)", async () => {
+      const collection = COLLECTION.toLowerCase();
+
+      const event = CatalogRelease1155.ContractPermissionsUpdated.createMockEvent({
+        user: ARTIST,
+        authScope: BigInt(AUTH_SCOPE_MANAGER),
+      });
+      (event as { srcAddress: string }).srcAddress = COLLECTION;
+
+      const entityId = `${collection}_${event.chainId}_0_${ARTIST.toLowerCase()}`;
+      const mockDb = MockDb.createMockDb().entities.Catalog_Admins.set({
+        id: entityId,
+        collection,
+        token_id: 0n,
+        admin: ARTIST.toLowerCase(),
+        chain_id: event.chainId,
+        auth_scope: AUTH_SCOPE_OWNER | AUTH_SCOPE_ARTIST,
+        updated_at: event.block.timestamp, // same block
+      });
+
+      const mockDbUpdated = await CatalogRelease1155.ContractPermissionsUpdated.processEvent({
+        event,
+        mockDb,
+      });
+
+      const actualEntity = mockDbUpdated.entities.Catalog_Admins.get(entityId);
+      assert.equal(
+        actualEntity?.auth_scope,
+        AUTH_SCOPE_MANAGER,
+        "same-block update should overwrite"
+      );
+    });
+
     it("should not overwrite a more recent entity", async () => {
       const collection = COLLECTION.toLowerCase();
 
