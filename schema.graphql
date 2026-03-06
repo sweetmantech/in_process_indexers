@@ -116,6 +116,16 @@ type InProcess_Collectors {
   collected_at: Int!
 }
 
+type Catalog_Admins {
+  id: ID!
+  admin: String!
+  collection: String!
+  token_id: BigInt!
+  chain_id: Int!
+  auth_scope: Int!
+  updated_at: Int!
+}
+
 type Secondary_Sales {
   id: ID!
   collection: String!
