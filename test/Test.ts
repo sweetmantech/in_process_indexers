@@ -2,14 +2,20 @@ import assert from "assert";
 import { TestHelpers } from "generated";
 import type {
   InProcess_Collections,
-  InProcess_Collectors,
+  Collectors,
   InProcess_Moment_Comments,
   InProcess_Moments,
   InProcess_Admins,
   InProcess_Payments,
 } from "generated";
 
-const { MockDb, InProcessCreatorFactory, InProcessERC20Minter, InProcessMoment } = TestHelpers;
+const {
+  MockDb,
+  InProcessCreatorFactory,
+  InProcessERC20Minter,
+  InProcessMoment,
+  CatalogRelease1155,
+} = TestHelpers;
 
 describe("Event Handler Tests", () => {
   describe("InProcessCreatorFactory.SetupNewContract", () => {
@@ -240,8 +246,54 @@ describe("Event Handler Tests", () => {
     });
   });
 
+  describe("CatalogRelease1155.TokenPurchased (Collects)", () => {
+    it("should create Collectors entity correctly", async () => {
+      const mockDb = MockDb.createMockDb();
+
+      const collection = "0x1234567890123456789012345678901234567890";
+      const buyer = "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd";
+      const tokenId = 2n;
+      const amount = 5n;
+
+      const event = CatalogRelease1155.TokenPurchased.createMockEvent({
+        tokenId,
+        amount,
+        buyer,
+        referrer0: "0x0000000000000000000000000000000000000000",
+        referrer1: "0x0000000000000000000000000000000000000000",
+      });
+
+      (event as { srcAddress: string }).srcAddress = collection;
+
+      const mockDbUpdated = await CatalogRelease1155.TokenPurchased.processEvent({
+        event,
+        mockDb,
+      });
+
+      const entityId = `${collection.toLowerCase()}_${tokenId.toString()}_${event.chainId}_${event.block.number}_${event.logIndex}`;
+      const actualEntity = mockDbUpdated.entities.Collectors.get(entityId);
+
+      const expectedEntity: Collectors = {
+        id: entityId,
+        collection: collection.toLowerCase(),
+        token_id: tokenId,
+        amount,
+        chain_id: event.chainId,
+        collector: buyer.toLowerCase(),
+        transaction_hash: event.transaction.hash,
+        collected_at: event.block.timestamp,
+      };
+
+      assert.deepEqual(
+        actualEntity,
+        expectedEntity,
+        "Collectors entity should match expected values"
+      );
+    });
+  });
+
   describe("InProcessMoment.TransferSingle (Collects)", () => {
-    it("should create InProcess_Collectors entity correctly", async function () {
+    it("should create Collectors entity correctly", async function () {
       this.timeout(10000);
       const collection = "0x9f19bf91451238b706e596e0237a64811fae8e4b";
       const defaultAdmin = "0xaf1452d289e22fbd0dea9d5097353c72a90fac33";
@@ -279,9 +331,9 @@ describe("Event Handler Tests", () => {
       });
 
       const entityId = `${collection.toLowerCase()}_${tokenId.toString()}_${event.chainId}_${event.block.number}_${event.logIndex}`;
-      const actualEntity = mockDbUpdated.entities.InProcess_Collectors.get(entityId);
+      const actualEntity = mockDbUpdated.entities.Collectors.get(entityId);
 
-      const expectedEntity: InProcess_Collectors = {
+      const expectedEntity: Collectors = {
         id: entityId,
         collection: collection.toLowerCase(),
         token_id: tokenId,
@@ -295,7 +347,7 @@ describe("Event Handler Tests", () => {
       assert.deepEqual(
         actualEntity,
         expectedEntity,
-        "InProcess_Collectors entity should match expected values"
+        "Collectors entity should match expected values"
       );
     });
   });
