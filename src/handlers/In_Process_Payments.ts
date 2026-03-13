@@ -1,18 +1,18 @@
 import {
   InProcessERC20Minter,
   InProcessMoment,
-  type InProcess_Payments,
+  type Payments,
   type InProcessERC20Minter_ERC20RewardsDeposit_handlerArgs,
   type InProcessMoment_Purchased_handlerArgs,
 } from "generated";
-import getUsdcTransfer from "@/lib/getUsdcTransfer";
+import getUsdcTransfer from "@/lib/in_process_payments/getUsdcTransfer";
 import { formatEther, zeroAddress } from "viem";
 import extractPurchaseRecipientAndComment from "@/lib/extractPurchaseRecipientAndComment";
 
 InProcessERC20Minter.ERC20RewardsDeposit.handler(
   async ({ event, context }: InProcessERC20Minter_ERC20RewardsDeposit_handlerArgs) => {
     const usdcTransfer = await getUsdcTransfer(event);
-    const entity: InProcess_Payments = {
+    const entity: Payments = {
       id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
       collection: event.params.collection,
       currency: event.params.currency,
@@ -25,7 +25,7 @@ InProcessERC20Minter.ERC20RewardsDeposit.handler(
       transferred_at: event.block.timestamp,
     };
 
-    context.InProcess_Payments.set(entity);
+    context.Payments.set(entity);
   }
 );
 
@@ -37,7 +37,7 @@ InProcessMoment.Purchased.handler(
       context.InProcess_Moment_Comments.set(mintComment);
     }
 
-    const entity: InProcess_Payments = {
+    const entity: Payments = {
       id: `${event.chainId}_${event.block.number}_${event.logIndex}`,
       collection: event.srcAddress.toLowerCase(),
       currency: zeroAddress,
@@ -51,6 +51,6 @@ InProcessMoment.Purchased.handler(
     };
 
     if (event.params.value === BigInt(0) || recipient === zeroAddress) return;
-    context.InProcess_Payments.set(entity);
+    context.Payments.set(entity);
   }
 );
