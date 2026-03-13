@@ -1,7 +1,7 @@
 import { Address, erc20Abi, Hash, parseEventLogs, zeroAddress } from "viem";
 import { InProcessERC20Minter_ERC20RewardsDeposit_event } from "generated";
-import formatUnits from "./formatUnits";
-import getTransactionReceipt from "./viem/getTransactionReceipt";
+import formatUnits from "../formatUnits";
+import getTransactionReceipt from "../viem/getTransactionReceipt";
 
 type UsdcTransfer = {
   from?: Address;

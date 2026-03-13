@@ -6,7 +6,7 @@ import type {
   InProcess_Moment_Comments,
   InProcess_Moments,
   InProcess_Admins,
-  InProcess_Payments,
+  Payments,
 } from "generated";
 
 const {
@@ -122,10 +122,10 @@ describe("Event Handler Tests", () => {
       });
 
       const entityId = `${event.chainId}_${event.block.number}_${event.logIndex}`;
-      const actualEntity = await mockDbUpdated.entities.InProcess_Payments.get(entityId);
+      const actualEntity = await mockDbUpdated.entities.Payments.get(entityId);
 
       // Note: getUsdcTransfer is async and may fail in tests, so we check for basic structure
-      assert.ok(actualEntity, "InProcess_Payments entity should exist");
+      assert.ok(actualEntity, "Payments entity should exist");
       assert.equal(actualEntity.id, entityId, "Entity ID should match expected format");
       assert.equal(
         actualEntity.collection,

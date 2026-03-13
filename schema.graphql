@@ -68,7 +68,7 @@ type InProcess_Airdrops {
   updated_at: Int!
 }
 
-type InProcess_Payments {
+type Payments {
   id: ID!
   collection: String!
   currency: String!
