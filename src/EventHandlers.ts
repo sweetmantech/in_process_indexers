@@ -13,3 +13,4 @@ import "./handlers/Catalog_Admins";
 import "./handlers/Catalog_Collectors";
 import "./handlers/Sound_Editions";
 import "./handlers/Sound_Moments";
+import "./handlers/Sound_Admins";

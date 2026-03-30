@@ -83,6 +83,7 @@ contracts:
         field_selection:
           transaction_fields:
             - hash
+      - event: "RolesUpdated(address indexed user, uint256 indexed roles)"
 
   - name: SoundMetadata
     handler: src/EventHandlers.ts
