@@ -79,11 +79,7 @@ contracts:
   - name: SoundEditionV2_1
     handler: src/EventHandlers.ts
     events:
-      - event: "SoundEditionInitialized((string,string,address,string,string,address,uint16,bool,bool,(uint8,uint32,uint32,uint32,bool,bool)[]) init)"
-        field_selection:
-          transaction_fields:
-            - hash
-      - event: "Minted(uint8 indexed tier, address indexed to, uint256 quantity, uint256 fromTokenId)"
+      - event: "Minted(uint8 tier, address to, uint256 quantity, uint256 fromTokenId)"
         field_selection:
           transaction_fields:
             - hash
@@ -91,7 +87,7 @@ contracts:
   - name: SoundMetadata
     handler: src/EventHandlers.ts
     events:
-      - event: "BaseURISet(address indexed edition, uint8 indexed tier, string uri)"
+      - event: "BaseURISet(address indexed edition, uint8 tier, string uri)"
         field_selection:
           transaction_fields:
             - hash

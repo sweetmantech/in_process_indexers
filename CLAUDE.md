@@ -470,3 +470,36 @@ pnpm codegen
 
 Generated types live in `generated/src/db/Entities.gen.ts`.
 Type errors after schema changes are expected until codegen runs.
+
+---
+
+## Envio Indexing Pitfalls
+
+### 1. `indexed` Mismatch in Event Signatures
+
+**Always verify `indexed` against actual on-chain topics, not ABI docs.**
+
+If a config event signature marks a param as `indexed` but the contract does not, envio will look for a topics entry that doesn't exist and either skip the event or misparse the data. The symptom is that handlers silently never fire or fields are empty/garbled.
+
+**How to verify:** Count the topics in the on-chain log. Each `indexed` param occupies one topic slot after topics[0] (the event sig hash).
+
+Sound.xyz examples caught:
+
+- `Minted(uint8 tier, address to, uint256 quantity, uint256 fromTokenId)` — tier and to are **not** indexed (only 1 topic on-chain)
+- `BaseURISet(address indexed edition, uint8 tier, string uri)` — tier is **not** indexed (only 2 topics on-chain: sig + edition)
+
+### 2. Factory Pattern: contractRegister Misses Same-Tx Events
+
+When a factory deploys and initializes a new contract in the **same transaction**, events emitted by the new contract fire **before** the factory's `Created` event (lower log index). By the time `contractRegister` runs on `Created`, those earlier events have already passed and will never be re-processed.
+
+Sound.xyz example (same tx log order):
+
+- log 335: `SoundEditionInitialized` (new edition contract)
+- log 340: `BaseURISet` (SoundMetadata, fixed address — always captured)
+- log 345: `Created` (SoundCreatorV2 factory)
+
+**Fix:** Decode `initData` bytes from the `Created` event directly instead of relying on the initialization event from the new contract.
+
+- Implementation: `lib/sound_editions/decodeInitData.ts`
+- `initData` = 4-byte function selector + ABI-encoded `EditionInitialization` struct
+- Strip selector with `.slice(10)`, then use viem's `decodeAbiParameters`
