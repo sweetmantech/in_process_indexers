@@ -1,4 +1,5 @@
 import assert from "assert";
+import { encodeAbiParameters } from "viem";
 import { TestHelpers } from "generated";
 import type { Sound_Editions, Sound_Tiers, Sound_Moments } from "generated";
 
@@ -46,41 +47,70 @@ describe("Sound.xyz Handler Tests", () => {
     });
   });
 
-  describe("SoundEditionV2_1.SoundEditionInitialized", () => {
-    it("should fill name and uri, preserve owner from Created", async () => {
+  describe("SoundCreatorV2.Created (with initData)", () => {
+    it("should decode name and uri from initData", async () => {
+      // SoundEditionInitialized fires before Created in the same tx so it's never captured.
+      // The Created handler decodes initData directly instead.
+      const encoded = encodeAbiParameters(
+        [
+          {
+            name: "init",
+            type: "tuple",
+            components: [
+              { name: "name", type: "string" },
+              { name: "symbol", type: "string" },
+              { name: "metadataModule", type: "address" },
+              { name: "baseURI", type: "string" },
+              { name: "contractURI", type: "string" },
+              { name: "fundingRecipient", type: "address" },
+              { name: "royaltyBPS", type: "uint16" },
+              { name: "isCreateTierFrozen", type: "bool" },
+              { name: "isMintRandomnessEnabled", type: "bool" },
+              {
+                name: "tierCreations",
+                type: "tuple[]",
+                components: [
+                  { name: "tier", type: "uint8" },
+                  { name: "maxMintableLower", type: "uint32" },
+                  { name: "maxMintableUpper", type: "uint32" },
+                  { name: "cutoffTime", type: "uint32" },
+                  { name: "mintRandomnessEnabled", type: "bool" },
+                  { name: "isFrozen", type: "bool" },
+                ],
+              },
+            ],
+          },
+        ],
+        [
+          {
+            name: "Test Album",
+            symbol: "TA",
+            metadataModule: "0x0000000000000000000000000000000000000000",
+            baseURI: "",
+            contractURI: CONTRACT_URI,
+            fundingRecipient: OWNER as `0x${string}`,
+            royaltyBPS: 1000,
+            isCreateTierFrozen: false,
+            isMintRandomnessEnabled: false,
+            tierCreations: [],
+          },
+        ]
+      );
+      // Prepend a fake 4-byte selector (stripped by decodeInitData)
+      const initData = `0x12345678${encoded.slice(2)}` as `0x${string}`;
+
       const event = SoundCreatorV2.Created.createMockEvent({
         edition: EDITION,
         owner: OWNER,
+        initData,
       });
 
-      const mockDb = await SoundCreatorV2.Created.processEvent({
+      const db = await SoundCreatorV2.Created.processEvent({
         event,
         mockDb: MockDb.createMockDb(),
       });
 
-      const initEvent = SoundEditionV2_1.SoundEditionInitialized.createMockEvent({
-        // [name, symbol, metadataModule, baseURI, contractURI, fundingRecipient, royaltyBPS, isMetadataFrozen, isCreateTierFrozen, tierCreations[]]
-        init: [
-          "Test Album",
-          "TA",
-          "0x0000000000000000000000000000000000000000",
-          "",
-          CONTRACT_URI,
-          OWNER as `0x${string}`,
-          1000n,
-          false,
-          false,
-          [],
-        ],
-        mockEventData: { srcAddress: EDITION },
-      });
-
-      const db = await SoundEditionV2_1.SoundEditionInitialized.processEvent({
-        event: initEvent,
-        mockDb,
-      });
-
-      const id = `${EDITION.toLowerCase()}_${initEvent.chainId}`;
+      const id = `${EDITION.toLowerCase()}_${event.chainId}`;
       const actual = await db.entities.Sound_Editions.get(id);
 
       assert.equal(actual?.name, "Test Album");
