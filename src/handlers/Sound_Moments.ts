@@ -54,7 +54,7 @@ SoundEditionV2_1.Minted.handler(async ({ event, context }: SoundEditionV2_1_Mint
       id: `${edition}_${tokenId}_${event.chainId}`,
       collection: edition,
       token_id: tokenId,
-      uri: baseUri ? `${baseUri}${tierIndex}` : "",
+      uri: baseUri ? `${baseUri}/${tierIndex}` : "",
       chain_id: event.chainId,
       created_at: event.block.timestamp,
       updated_at: event.block.timestamp,

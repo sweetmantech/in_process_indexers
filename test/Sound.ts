@@ -9,8 +9,8 @@ const OWNER = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const CONTRACT_URI = "ar://contractHash/";
 const TIER_FREE = 0;
 const TIER_LIMITED = 1;
-const FREE_BASE_URI = "ar://21xBOczDUFX0bg52sy34LDTO1Fro6mBGvd1FUYe0wvA/";
-const LIMITED_BASE_URI = "ar://yYH8g5Nt9bjK8B_qOk6R22K1rKkJMfPRuoMnbUhIQaI/";
+const FREE_BASE_URI = "ar://21xBOczDUFX0bg52sy34LDTO1Fro6mBGvd1FUYe0wvA";
+const LIMITED_BASE_URI = "ar://yYH8g5Nt9bjK8B_qOk6R22K1rKkJMfPRuoMnbUhIQaI";
 
 describe("Sound.xyz Handler Tests", () => {
   // ─────────────────────────────────────────────
@@ -60,7 +60,18 @@ describe("Sound.xyz Handler Tests", () => {
 
       const initEvent = SoundEditionV2_1.SoundEditionInitialized.createMockEvent({
         // [name, symbol, metadataModule, baseURI, contractURI, fundingRecipient, royaltyBPS, isMetadataFrozen, isCreateTierFrozen, tierCreations[]]
-        init: ["Test Album", "TA", "0x0000000000000000000000000000000000000000", "", CONTRACT_URI, OWNER as `0x${string}`, 1000n, false, false, []],
+        init: [
+          "Test Album",
+          "TA",
+          "0x0000000000000000000000000000000000000000",
+          "",
+          CONTRACT_URI,
+          OWNER as `0x${string}`,
+          1000n,
+          false,
+          false,
+          [],
+        ],
         mockEventData: { srcAddress: EDITION },
       });
 
@@ -176,7 +187,7 @@ describe("Sound.xyz Handler Tests", () => {
           id,
           collection: EDITION.toLowerCase(),
           token_id: i,
-          uri: `${LIMITED_BASE_URI}${i}`, // 1-indexed position within tier
+          uri: `${LIMITED_BASE_URI}/${i}`, // 1-indexed position within tier
           chain_id: 8453,
           created_at: event.block.timestamp,
           updated_at: event.block.timestamp,
@@ -213,8 +224,8 @@ describe("Sound.xyz Handler Tests", () => {
       const token4 = await db.entities.Sound_Moments.get(`${EDITION.toLowerCase()}_4_8453`);
       const token5 = await db.entities.Sound_Moments.get(`${EDITION.toLowerCase()}_5_8453`);
 
-      assert.equal(token4?.uri, `${LIMITED_BASE_URI}4`); // 3 + 0 + 1
-      assert.equal(token5?.uri, `${LIMITED_BASE_URI}5`); // 3 + 1 + 1
+      assert.equal(token4?.uri, `${LIMITED_BASE_URI}/4`); // 3 + 0 + 1
+      assert.equal(token5?.uri, `${LIMITED_BASE_URI}/5`); // 3 + 1 + 1
     });
 
     it("should update Sound_Tiers.quantity after mint", async () => {
