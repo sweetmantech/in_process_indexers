@@ -11,3 +11,5 @@ import "./handlers/Catalog_Moments";
 import "./handlers/Catalog_Sales";
 import "./handlers/Catalog_Admins";
 import "./handlers/Catalog_Collectors";
+import "./handlers/Sound_Editions";
+import "./handlers/Sound_Moments";
