@@ -1,10 +1,14 @@
 import { decodeInitData } from "../../lib/sound_editions/decodeInitData";
+import { getLatestAdmin } from "@/lib/sound_admins/getLatestAdmin";
 import {
   SoundCreatorV2,
+  type Sound_Admins,
   type Sound_Editions,
   type SoundCreatorV2_Created_handlerArgs,
   type contractRegistrations,
 } from "generated";
+
+const ADMIN_ROLE = 1;
 
 SoundCreatorV2.Created.contractRegister(
   ({
@@ -33,4 +37,16 @@ SoundCreatorV2.Created.handler(async ({ event, context }: SoundCreatorV2_Created
     transaction_hash: event.transaction.hash,
   };
   context.Sound_Editions.set(entity);
+
+  const ownerAdmin: Sound_Admins = {
+    id: `${address}_${event.chainId}_0_${event.params.owner.toLowerCase()}`,
+    collection: address,
+    token_id: BigInt(0),
+    admin: event.params.owner.toLowerCase(),
+    roles: ADMIN_ROLE,
+    chain_id: event.chainId,
+    updated_at: event.block.timestamp,
+  };
+  const latestAdmin = await getLatestAdmin(ownerAdmin, context);
+  context.Sound_Admins.set(latestAdmin);
 });
