@@ -347,7 +347,7 @@ describe("Sound.xyz Handler Tests", () => {
       const db = await SoundEditionV2_1.RolesUpdated.processEvent({ event, mockDb });
 
       const id = `${EDITION.toLowerCase()}_8453_0_${USER.toLowerCase()}`;
-      const actual = await db.entities.Sound_Admins.get(id);
+      const actual = db.entities.Sound_Admins.get(id);
 
       assert.equal(actual?.roles, SOUND_ADMIN_ROLE);
       assert.equal(actual?.admin, USER.toLowerCase());
@@ -366,7 +366,7 @@ describe("Sound.xyz Handler Tests", () => {
       const db = await SoundEditionV2_1.RolesUpdated.processEvent({ event, mockDb });
 
       const id = `${EDITION.toLowerCase()}_8453_0_${USER.toLowerCase()}`;
-      const actual = await db.entities.Sound_Admins.get(id);
+      const actual = db.entities.Sound_Admins.get(id);
 
       assert.equal(actual?.roles, ADMIN_AND_MINTER);
     });
@@ -383,7 +383,7 @@ describe("Sound.xyz Handler Tests", () => {
       const db = await SoundEditionV2_1.RolesUpdated.processEvent({ event, mockDb });
 
       const id = `${EDITION.toLowerCase()}_8453_0_${USER.toLowerCase()}`;
-      const actual = await db.entities.Sound_Admins.get(id);
+      const actual = db.entities.Sound_Admins.get(id);
 
       assert.equal(actual?.roles, 0);
     });
@@ -400,7 +400,7 @@ describe("Sound.xyz Handler Tests", () => {
       const db = await SoundEditionV2_1.RolesUpdated.processEvent({ event, mockDb });
 
       const id = `${EDITION.toLowerCase()}_8453_0_${USER.toLowerCase()}`;
-      const actual = await db.entities.Sound_Admins.get(id);
+      const actual = db.entities.Sound_Admins.get(id);
 
       assert.equal(actual, undefined);
     });
