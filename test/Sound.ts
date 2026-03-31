@@ -1,7 +1,8 @@
 import assert from "assert";
 import { encodeAbiParameters } from "viem";
 import { TestHelpers } from "generated";
-import type { Sound_Editions, Sound_Tiers, Sound_Moments } from "generated";
+import type { Sound_Editions, Sound_Tiers, Sound_Moments, Sound_Admins } from "generated";
+import { SOUND_ADMIN_ROLE } from "../lib/consts";
 
 const { MockDb, SoundCreatorV2, SoundEditionV2_1, SoundMetadata } = TestHelpers;
 
@@ -45,6 +46,32 @@ describe("Sound.xyz Handler Tests", () => {
 
       assert.deepEqual(actual, expected);
     });
+  });
+
+  it("should store owner in Sound_Admins with ADMIN_ROLE", async () => {
+    const mockDb = MockDb.createMockDb();
+
+    const event = SoundCreatorV2.Created.createMockEvent({
+      edition: EDITION,
+      owner: OWNER,
+    });
+
+    const db = await SoundCreatorV2.Created.processEvent({ event, mockDb });
+
+    const id = `${EDITION}_${event.chainId}_0_${OWNER.toLowerCase()}`;
+    const actual = await db.entities.Sound_Admins.get(id);
+
+    const expected: Sound_Admins = {
+      id,
+      collection: EDITION,
+      token_id: 0n,
+      admin: OWNER.toLowerCase(),
+      roles: SOUND_ADMIN_ROLE,
+      chain_id: event.chainId,
+      updated_at: event.block.timestamp,
+    };
+
+    assert.deepEqual(actual, expected);
   });
 
   describe("SoundCreatorV2.Created (with initData)", () => {
@@ -299,6 +326,83 @@ describe("Sound.xyz Handler Tests", () => {
 
       const token = await db.entities.Sound_Moments.get(`${EDITION.toLowerCase()}_1_8453`);
       assert.equal(token?.uri, "");
+    });
+  });
+
+  // ─────────────────────────────────────────────
+  // Sound_Admins
+  // ─────────────────────────────────────────────
+  describe("SoundEditionV2_1.RolesUpdated", () => {
+    const USER = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+
+    it("should store admin when ADMIN_ROLE is granted", async () => {
+      const mockDb = MockDb.createMockDb();
+
+      const event = SoundEditionV2_1.RolesUpdated.createMockEvent({
+        user: USER as `0x${string}`,
+        roles: BigInt(SOUND_ADMIN_ROLE),
+        mockEventData: { srcAddress: EDITION, chainId: 8453 },
+      });
+
+      const db = await SoundEditionV2_1.RolesUpdated.processEvent({ event, mockDb });
+
+      const id = `${EDITION.toLowerCase()}_8453_0_${USER.toLowerCase()}`;
+      const actual = await db.entities.Sound_Admins.get(id);
+
+      assert.equal(actual?.roles, SOUND_ADMIN_ROLE);
+      assert.equal(actual?.admin, USER.toLowerCase());
+    });
+
+    it("should store admin when ADMIN_ROLE and MINTER_ROLE are both set", async () => {
+      const mockDb = MockDb.createMockDb();
+      const ADMIN_AND_MINTER = 3; // 1 | 2
+
+      const event = SoundEditionV2_1.RolesUpdated.createMockEvent({
+        user: USER as `0x${string}`,
+        roles: BigInt(ADMIN_AND_MINTER),
+        mockEventData: { srcAddress: EDITION, chainId: 8453 },
+      });
+
+      const db = await SoundEditionV2_1.RolesUpdated.processEvent({ event, mockDb });
+
+      const id = `${EDITION.toLowerCase()}_8453_0_${USER.toLowerCase()}`;
+      const actual = await db.entities.Sound_Admins.get(id);
+
+      assert.equal(actual?.roles, ADMIN_AND_MINTER);
+    });
+
+    it("should store admin when roles=0 (revocation)", async () => {
+      const mockDb = MockDb.createMockDb();
+
+      const event = SoundEditionV2_1.RolesUpdated.createMockEvent({
+        user: USER as `0x${string}`,
+        roles: 0n,
+        mockEventData: { srcAddress: EDITION, chainId: 8453 },
+      });
+
+      const db = await SoundEditionV2_1.RolesUpdated.processEvent({ event, mockDb });
+
+      const id = `${EDITION.toLowerCase()}_8453_0_${USER.toLowerCase()}`;
+      const actual = await db.entities.Sound_Admins.get(id);
+
+      assert.equal(actual?.roles, 0);
+    });
+
+    it("should skip when only MINTER_ROLE is set (no ADMIN_ROLE)", async () => {
+      const mockDb = MockDb.createMockDb();
+
+      const event = SoundEditionV2_1.RolesUpdated.createMockEvent({
+        user: USER as `0x${string}`,
+        roles: 2n, // MINTER_ROLE only
+        mockEventData: { srcAddress: EDITION, chainId: 8453 },
+      });
+
+      const db = await SoundEditionV2_1.RolesUpdated.processEvent({ event, mockDb });
+
+      const id = `${EDITION.toLowerCase()}_8453_0_${USER.toLowerCase()}`;
+      const actual = await db.entities.Sound_Admins.get(id);
+
+      assert.equal(actual, undefined);
     });
   });
 });
